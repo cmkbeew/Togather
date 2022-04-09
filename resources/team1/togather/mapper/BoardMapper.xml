@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team1.togather.mapper.BoardMapper">
+   <select id="listPage" resultType="Board" parameterType="Integer">
+	select * from (select ROWNUM rnum, aa.* from (select * from BOARD order by bnum desc) aa)
+   		where rnum between #{page} and #{page}+10
+	</select>
+	
+	<!-- 페이지정보를 지정한 크기만큼 가져오기 -->
+	<select id="listPageCri" resultType="Board" parameterType="BoardCriteria">
+		<![CDATA[
+	   		select * from (select ROWNUM rnum, aa.* from (select * from BOARD order by bnum desc) aa)
+	   		where rnum>#{startRow} and rnum<=#{endRow}
+	   		]]>
+	</select>
+	<select id="pageCount" resultType="Integer" >
+			select count(*) from BOARD
+	</select>
+	
+	<insert id="insert" parameterType="Board">
+   		insert into BOARD values(B_NUM_SEQ.nextval, #{bcategory}, #{btitle}, 1, #{mname}, 
+   		#{bcontent}, '' , 0, 0, SYSDATE)
+    </insert>
+    <select id="getBoardContent" parameterType="Long" resultType="Board">
+    	select * from BOARD where BNUM=#{bnum}
+    </select>
+    <select id="getBoardBySearch" parameterType="Map" resultType="Board">
+    	<![CDATA[
+	   		select * from (select ROWNUM rnum, aa.* from (select * from BOARD where ${option} like '%'||#{boardSearch}||'%' order by bnum desc) aa)
+	   		where rnum>#{startRow} and rnum<=#{endRow}
+	   	]]>
+    </select>
+    <delete id="delete" parameterType="Long">
+   		delete from BOARD where BNUM=#{bnum}
+   </delete>
+   <update id = "update" parameterType="Board">
+   		update BOARD set BTITLE=#{btitle}, MNAME=#{mname}, BCATEGORY=#{bcategory} ,BCONTENT=#{bcontent} where BNUM=#{bnum}
+   </update>
+   <update id = "updateBView" parameterType="Long">
+   		update BOARD set BVIEW=(select BVIEW+1 from BOARD where BNUM=#{bnum}) where BNUM=#{bnum} 
+   </update> 
+</mapper> 
