@@ -39,12 +39,6 @@
   <!-- Template Main CSS File -->
   <link href="/assets/css/style.css" rel="stylesheet" />
 
-  <!-- =======================================================
-* Template Name: Mentor - v4.7.0
-* Template URL: https://bootstrapmade.com/mentor-free-education-bootstrap-theme/
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-======================================================== -->
 
   <!--===============================================================================================-->
   <link rel="icon" type="image/png" href="/assets/img/favicon.png" />
@@ -161,7 +155,6 @@
   <div class="breadcrumbs">
     <div class="container">
       <h2>자주 묻는 질문</h2>
-      <p>자주 묻는 질문 설명</p>
     </div>
   </div>
   <!-- End Breadcrumbs -->

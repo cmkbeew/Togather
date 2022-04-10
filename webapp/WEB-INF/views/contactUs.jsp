@@ -113,7 +113,7 @@
     <!-- ======= Breadcrumbs ======= -->
     <div class="breadcrumbs" data-aos="fade-in">
         <div class="container">
-            <h1>About Us</h1>
+            <h1>Contact Us</h1>
         </div>
     </div>
     <!-- End Breadcrumbs -->
