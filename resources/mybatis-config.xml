@@ -21,8 +21,6 @@
 		<typeAlias alias="GatheringCriteria" type="team1.togather.domain.GatheringCriteria" />
 		<typeAlias alias="MemInGathering" type="team1.togather.domain.MemInGathering"/>
 		<typeAlias alias="Faq" type="team1.togather.domain.Faq"/>
-		<typeAlias alias="FaqVo" type="team1.togather.domain.FaqVo"/>
-		<typeAlias alias="FaqPageMaker" type="team1.togather.domain.FaqPageMaker"/>
 		<typeAlias alias="Notification" type="team1.togather.domain.Notification"/>
 		<typeAlias alias="NotificationCriteria" type="team1.togather.domain.NotificationCriteria"/>
 		<typeAlias alias="IndexCriteria" type="team1.togather.domain.IndexCriteria" />

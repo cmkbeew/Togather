@@ -58,4 +58,10 @@ public interface GroupTabService {
 	Integer galleryPageCount(long gseq);
 	void galleryDelete(GroupTabGallery groupTabGallery);
 	Integer writerCheck(GroupTabGallery groupTabGallery);
+
+	void delegate(MemInGroup memInGroup);
+	MemInGroup selectKing(MemInGroup memInGroup);
+
+	List<GroupTab> searchGroup(GroupTab groupTab);
+	String kingName(long gseq);
 }

@@ -204,6 +204,23 @@ public class GroupTabServiceImpl implements GroupTabService {
 	public Integer writerCheck(GroupTabGallery groupTabGallery) {
 		return groupTabMapper.writerCheck(groupTabGallery);
 	}
+	@Override
+	public void delegate(MemInGroup memInGroup) {
+		groupTabMapper.delegate(memInGroup);
+	}
 
+	@Override
+	public MemInGroup selectKing(MemInGroup memInGroup) {
+		return groupTabMapper.selectKing(memInGroup);
+	}
+
+	@Override
+	public List<GroupTab> searchGroup(GroupTab groupTab){
+		return groupTabMapper.searchGroup(groupTab);
+	}
+	@Override
+	public String kingName(long gseq){
+		return groupTabMapper.kingName(gseq);
+	}
 
 }

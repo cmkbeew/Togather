@@ -199,6 +199,7 @@ public class IndexController {
 		}
 		return cateList;
 	}
+//	대현추가
 	@GetMapping("about")
 	public ModelAndView aboutUs() {
 		long membercount = memberService.memberCount();
@@ -209,6 +210,24 @@ public class IndexController {
 		mv.addObject("gatheringcount", gatheringcount);
 		return mv;
 	}
+//	현기추가
+	@GetMapping("getSearchGroupList")
+	@ResponseBody
+	public List<GroupTab> getSearchGroupList(GroupTab groupTab) {
+		System.out.println("gname: " + groupTab.getGname());
+		System.out.println("interest: " + groupTab.getInterest());
+		System.out.println("gloc: " + groupTab.getGloc());
 
+		List<GroupTab> groupList = groupTabService.searchGroup(groupTab);
+		System.out.println("groupList: " + groupList);
+		for(int i=0; i<groupList.size(); i++) {
+			String kingName = groupTabService.kingName(groupList.get(i).getGseq());
+			for(GroupTab li : groupList) {
+				li.setMname(kingName);
+			}
+		}
+
+		return groupList;
+}
 
 }

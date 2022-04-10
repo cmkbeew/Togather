@@ -118,7 +118,7 @@
 	</select>
 	<!-- 그룹인포 모임멤버 이름 구하는 sql -->
 	<select id="memInGroupName" resultType="HashMap" parameterType="MemInGroup">
-		select m.mname,m.mnum,mi.grade from member m,mem_in_group mi where m.mnum=mi.mnum and gseq=#{gseq} order by grade
+		select m.mname,m.mnum,mi.grade, m.birth, m.maddr from member m,mem_in_group mi where m.mnum=mi.mnum and gseq=#{gseq} order by grade
 	</select>
 	<!-- 그룹인포 모임gseq구하는 sql -->
 	<select id="memInGroupGseq" resultType="long" parameterType="MemInGroup">
@@ -189,4 +189,18 @@
 	<delete id="galleryDelete" parameterType="GroupTabGallery">
 		delete GROUP_GALLERY where galseq=#{galseq}
 	</delete>
+	<!-- 모임장/운영진 위임 및 해제 -->
+	<update id="delegate" parameterType="MemInGroup">
+		update MEM_IN_GROUP set GRADE=#{grade} where GSEQ=#{gseq} and MNUM=#{mnum}
+	</update>
+	<select id="selectKing" resultType="MemInGroup" parameterType="MemInGroup">
+		select * from MEM_IN_GROUP m where GSEQ=#{gseq} and grade>=1 and MNUM=(select min(MNUM) from MEM_IN_GROUP where GSEQ=#{gseq}) order by grade, mnum
+	</select>
+	<!-- 모임이름으로 검색 -->
+	<select id="searchGroup" resultType="GroupTab" parameterType="GroupTab">
+		select * from GROUPTAB where GNAME like '%'||#{gname}||'%' and INTEREST like '%'||#{interest}||'%' and GLOC like '%'||#{gloc}||'%' order by GSEQ desc
+	</select>
+	<select id="kingName" resultType="String" parameterType="long">
+		select mname from member where mnum=(select mnum from grouptab where gseq=#{gseq})
+	</select>
 </mapper>

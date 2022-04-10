@@ -9,5 +9,9 @@ public class CheckedConstant {
 	public static final int already = 1;
 	public static final int already_phone = 1;
 	public static final int already_email = 2;
+	public static final int SAME_PWD = 0;
+	public static final int NOTSAME_PWD = 1;
+	public static final int SAME_EMAIL = 0;
+	public static final int NOTSAME_EMAIL = 1;
 	
 }

@@ -61,5 +61,14 @@ public interface GroupTabMapper {
 	Integer galleryPageCount(long gseq);
 	void galleryDelete(GroupTabGallery groupTabGallery);
 	Integer writerCheck(GroupTabGallery groupTabGallery);
+
+	//모임 위임
+	void delegate(MemInGroup memInGroup);
+	MemInGroup selectKing(MemInGroup memInGroup);
+
+	//인덱스 검색
+	List<GroupTab> searchGroup(GroupTab groupTab);
+	String kingName(long gseq);
 }
+
 

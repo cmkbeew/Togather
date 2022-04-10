@@ -287,6 +287,82 @@
                 }
             });
         }
+        <!-- 현기 추가 -->
+        $(function(){
+            $("#getSearch").on("click", function(){
+                var gname = $("#gname").val();
+                var interest = $("#interest").val();
+                var gloc = $("#gloc").val();
+                var popularCourses = document.getElementById('popular-courses'); //모임리스트 보여주는 디자인 갖고오는 메소드
+                if(gname=="" && interest=="" && gloc==""){
+                    alert("모임이름, 관심사, 지역 중 한 가지 이상을 입력해주세요.");
+                    $("#gname").focus();
+                    return false;
+                }
+
+                $.ajax({
+                    url: "/getSearchGroupList.json",
+                    type: "GET",
+                    data: $("#searchForm").serialize(),
+                    success: function(result){
+                        if(result == ""){
+                            alert("검색하신 모임이 존재하지않습니다. ( 인덱스 페이지로 )");
+                            location.href="../";
+                        }
+                        console.log("result: " + result);
+
+                        $('#popularSection').empty();
+
+                        //검색한 모임 리스트를 띄워줘야함
+                        $('#section-title').replaceWith(
+                            "<section id='popular-courses' class='courses'>"
+                            +"<div class='container' data-aos='fade-up'>"
+                            +"<div class='section-title' style='padding-bottom: 0px' id='section-title'>"
+                            +"<h2 id='showGroupform'>소모임</h2>"
+                            +"<p>Searched Groups</p>"
+                            +"</div>"
+                            +"<div id='popularSection' class='row' data-aos='zoom-in' data-aos-delay='100'>"
+                        );
+
+                        $(result).each(function(index, item){
+                            console.log("index: " + index);
+                            console.log("item: " + item);
+                            $('#popularSection').append(
+                                "<div class='col-lg-4 col-md-6 d-flex align-items-stretch' id='listCard'>"
+                                +"<div class='course-item mt-5'>"
+                                +"<img src='/assets/img/groupImages/"+item.fname+"' width='414px' height='275px' alt='...'/>"
+                                +"<div class='course-content'>"
+                                +"<div class='d-flex justify-content-between align-items-center mb-3'>"
+                                +"<h4>"+item.interest+"</h4>"
+                                +"<p class='price'>"+item.gloc+"</p>"
+                                +"</div>"
+                                +"<h3><a href='groupTab/groupInfo.do?gseq="+item.gseq+"&mnum=${m.mnum}'>"+item.gname+"</a></h3>"
+                                +"<p>"+item.gintro+"</p>"
+                                +"<p><i class='fa fa-map-marker-alt text-primary me-2'></i>"+item.gloc+"</p>"
+                                +"<div class='trainer d-flex justify-content-between align-items-center'>"
+                                +"<div class='trainer-profile d-flex align-items-center'>"
+                                +"<img src='/assets/img/trainers/trainer-1.jpg' class='img-fluid' alt=''/>"
+                                +"<span>"+item.mname+"</span>"
+                                +"</div>"
+                                +"<div class='trainer-rank d-flex align-items-center'>"
+                                +"<i class='bx bx-user'></i>&nbsp;"+item.limit+"&nbsp;&nbsp;"
+                                +"<i class='bx bx-heart'></i>&nbsp;65"
+                                +"</div>"
+                                +"</div>"
+                                +"</div>"
+                                +"</div>"
+                                +"</div>"
+                                +"</div>"
+                                +"</section>"
+                            );
+                        })
+                    },
+                    error:function(error){
+                        console.log("##error: "+error);
+                    }
+                });
+            });
+        });
 
     </script>
 
@@ -350,6 +426,7 @@
                     </c:when>
                     <c:otherwise>
                         <li><a href="javascript:void(0);" onclick="signout();">로그아웃</a></li>
+                        <li><a href="mypage/main">마이페이지</a></li>
                     </c:otherwise>
                 </c:choose>
             </ul>
@@ -400,60 +477,64 @@
         data-wow-delay="0.1s"
         style="padding: 35px; background-color: #5fcf80"
 >
-    <div class="container">
-        <div class="row g-2">
-            <div class="col-md-10">
-                <div class="row g-2">
-                    <div class="col-md-4">
-                        <input
-                                type="text"
-                                class="form-control border-0 py-3"
-                                placeholder="모임찾기"
-                        />
-                    </div>
-                    <div class="col-md-4">
-                        <select class="form-select border-0 py-3">
-                            <option selected disabled>관심사</option>
-                            <option value="1">아웃도어/여행</option>
-                            <option value="2">외국/언어</option>
-                            <option value="3">음악/악기</option>
-                            <option value="4">차/오토바이</option>
-                            <option value="5">요리/제조</option>
-                            <option value="6">업종/직무</option>
-                            <option value="7">문화/공연/축제</option>
-                            <option value="8">공예/만들기</option>
-                            <option value="9">댄스/무용</option>
-                            <option value="10">봉사활동</option>
-                            <option value="11">인문학/책/글</option>
-                            <option value="12">사진/영상</option>
-                            <option value="13">게임/오락</option>
-                            <option value="14">반려동물</option>
-                            <option value="15">자유주제</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <select class="form-select border-0 py-3">
-                            <option selected disabled>지역</option>
-                            <option value="1">서울</option>
-                            <option value="2">경기</option>
-                            <option value="3">인천</option>
-                            <option value="4">강원</option>
-                            <option value="5">충북</option>
-                            <option value="6">충남</option>
-                            <option value="7">전북</option>
-                            <option value="8">전남</option>
-                            <option value="9">경북</option>
-                            <option value="10">경남</option>
-                            <option value="11">제주</option>
-                        </select>
+    <form  id="searchForm">
+        <div class="container">
+            <div class="row g-2">
+                <div class="col-md-10">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <input
+                                    type="text"
+                                    class="form-control border-0 py-3"
+                                    placeholder="모임이름"
+                                    name="gname"
+                                    id="gname"
+                            />
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select border-0 py-3" name="interest" id="interest">
+                                <option selected value="">관심사</option>
+                                <option value="아웃도어/여행">아웃도어/여행</option>
+                                <option value="외국/언어">외국/언어</option>
+                                <option value="음악/악기">음악/악기</option>
+                                <option value="차/오토바이">차/오토바이</option>
+                                <option value="요리/제조">요리/제조</option>
+                                <option value="업종/직무">업종/직무</option>
+                                <option value="문화/공연/축제">문화/공연/축제</option>
+                                <option value="공예/만들기">공예/만들기</option>
+                                <option value="댄스/무용">댄스/무용</option>
+                                <option value="봉사활동">봉사활동</option>
+                                <option value="인문학/책/글">인문학/책/글</option>
+                                <option value="사진/영상">사진/영상</option>
+                                <option value="게임/오락">게임/오락</option>
+                                <option value="반려동물">반려동물</option>
+                                <option value="자유주제">자유주제</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select border-0 py-3" name="gloc" id="gloc">
+                                <option selected value="">지역</option>
+                                <option value="서울">서울</option>
+                                <option value="경기">경기</option>
+                                <option value="인천">인천</option>
+                                <option value="강원">강원</option>
+                                <option value="충북">충북</option>
+                                <option value="충남">충남</option>
+                                <option value="전북">전북</option>
+                                <option value="전남">전남</option>
+                                <option value="경북">경북</option>
+                                <option value="경남">경남</option>
+                                <option value="제주">제주</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-2">
-                <button class="btn btn-dark border-0 w-100 py-3">Search</button>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-dark border-0 w-100 py-3" id="getSearch">검색하기</button>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 <!-- Search End -->
 
@@ -636,7 +717,8 @@
 <!-- ======= Popular Courses Section ======= -->
 <section id="popular-courses" class="courses">
     <div class="container" data-aos="fade-up">
-        <div class="section-title">
+        <!-- id값 추가 확인! 0410-->
+        <div id="section-title" class="section-title">
             <h2>소모임</h2>
             <p id="showGroupform">Popular Groups</p>
         </div>

@@ -77,6 +77,8 @@ public class GroupTabController {
 		Long memInGroupCheck = groupTabService.memInGroupCheck(memInGroup);
 		List<Gathering> gatheringList = gatheringService.ga_selectByGseqS(gseq); //정모 목록 가져오기 (대현추가)
 		Long gatheringCountInGroup = groupTabService.gatheringCountInGroup(gseq);
+		Member memberInfo = memberService.memberInfo(memInGroup);
+		Long grade = groupTabService.grade(memInGroup);
 
 		ModelAndView mv = new ModelAndView("groupTab/groupInfo", "groupInfo", groupInfo);
 		mv.addObject("groupMemberCount", groupMemberCount);
@@ -85,6 +87,8 @@ public class GroupTabController {
 		mv.addObject("memInGroupName",memInGroupName);
 		mv.addObject("gatheringList", gatheringList);//정모 목록 가져오기 (대현추가)
 		mv.addObject("gatheringCountInGroup", gatheringCountInGroup);//모임info 정모갯수(대현추가)
+		mv.addObject("memberInfo", memberInfo);
+		mv.addObject("grade", grade);
 
 		List<String> gatheringDate = new ArrayList<>();
 		List<String> gatheringTime = new ArrayList<>();
@@ -421,6 +425,68 @@ public class GroupTabController {
 		groupTabService.galleryDelete(groupTabGallery); 
 		log.info("#galleryDelete(2): "+ groupTabGallery);
 		return "redirect:groupGallery.do?page="+cri.getPage()+"&pageSize="+cri.getPageSize()+"&gseq="+gseq+"&mnum="+mnum;
+	}
+
+	@PostMapping("delegateCheck")
+	@ResponseBody
+	public long delegateCheck(MemInGroup memInGroup) {
+		long grade = memInGroup.getGrade();
+
+		if(grade == 0) {
+			return 0;
+		}else if(grade == 1) {
+			return 1;
+		}else {
+			return 2;
+		}
+	}
+
+	@GetMapping("delegate.do")
+	public String delegate(MemInGroup memInGroup, HttpSession session) {
+		long grade = memInGroup.getGrade();
+		long gseq = memInGroup.getGseq();
+		long mnum = memInGroup.getMnum();
+
+		Member m =(Member)session.getAttribute("m");
+
+		if(grade == 2) { //일반회원을 운영진으로 위임할 때
+			grade = 1;
+			memInGroup.setGrade(grade);
+			groupTabService.delegate(memInGroup);
+			return "redirect:groupInfo.do?gseq="+gseq+"&mnum="+m.getMnum()+"";
+		}else if(grade ==1) { //운영진을 일반회원으로 위임해제할 때
+			grade = 2;
+			memInGroup.setGrade(grade);
+			groupTabService.delegate(memInGroup);
+			return "redirect:groupInfo.do?gseq="+gseq+"&mnum="+m.getMnum()+"";
+		}else {
+			System.out.println("mnum: " + mnum);
+			groupTabService.groupQuit(memInGroup); //모임장 탈퇴..
+			MemInGroup mig = groupTabService.selectKing(memInGroup);
+
+			Long groupMemberCount = groupTabService.groupMemberCount(gseq);
+			if(groupMemberCount==0) {
+				groupTabService.memInGroupDelete(gseq);
+				groupTabService.deleteS(gseq);
+				return "redirect:../";
+			}else {
+				mig.setGrade(0);
+				groupTabService.delegate(mig); //운영진 맨 윗 사람에게 모임장 자동 위임
+				return "redirect:groupInfo.do?gseq="+gseq+"&mnum="+m.getMnum()+"";
+			}
+		}
+	}
+
+	@PostMapping("kingQuitCheck")
+	@ResponseBody
+	public long kingQuitCheck(MemInGroup memInGroup) {
+		long grade = memInGroup.getGrade();
+		System.out.println("gradeeeee: " + grade);
+		if(grade == 0) {
+			return 0;
+		}else {
+			return 1;
+		}
 	}
 }
 

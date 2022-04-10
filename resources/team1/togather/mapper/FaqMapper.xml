@@ -1,39 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-	<mapper namespace="team1.togather.mapper.FaqMapper">
-		<!-- 해당 페이지 게시글 확인-->
-		<select id="listPage" resultType="Faq" parameterType="Integer">
-			select * from (select ROWNUM rnum, aa.* from (select * from FAQ order by FSEQ) aa) where rnum between #{page} and #{page}+10
-		</select>
-   		<!-- 페이지당 글 수 만큼 페이징 -->
-   		<select id="selectPerPage" resultType="Faq" parameterType="FaqVo">
-   			<![CDATA[select * from (select ROWNUM rnum, aa.* from (select * from FAQ order by FSEQ) aa) where rnum>#{startRow} and rnum<=#{endRow}]]>
-   		</select>
-   		<!-- 총 게시글 수 -->
-   		<select id="selectCount" resultType="Integer">
-   			select max(ROWNUM) from FAQ
-   		</select>
-   		<!-- 글쓰기 -->
-   		<insert id="insert" parameterType="Faq">
-   			insert into FAQ values(FAQ_SEQ.nextval, #{ftitle}, #{fcontent}, SYSDATE)
-   		</insert>
-   		<!-- 글 삭제 -->
-   		<delete id="delete" parameterType="long">
-   			delete from FAQ where FSEQ=#{fseq}
-   		</delete>
-   		<!-- 글 내용 가져오기 -->
-   		<select id="selectBySeq" resultType="Faq" parameterType="long">
-   			select * from FAQ where FSEQ=#{fseq}
-   		</select>
-   		<!-- 글 수정 -->
-   		<update id="update" parameterType="Faq">
-   			update FAQ set FTITLE=#{ftitle}, FCONTENT=#{fcontent} where FSEQ=#{fseq}
-   		</update>
-   		<!-- 검색기능  -->
-   		<select id="selectBySearch" resultType="Faq" parameterType="Map">
-   			<![CDATA[select * from (select ROWNUM rnum, aa.* from (select * from FAQ where ${option} like '%'||#{faqSearch}||'%') aa)
-	   		where rnum>#{startRow} and rnum<=#{endRow}]]>
-   		</select>
-	</mapper> 
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team1.togather.mapper.FaqMapper">
+	<!-- 해당 페이지 게시글 확인-->
+	<select id="list" resultType="Faq">
+		select * from FAQ order by FSEQ
+	</select>
+	<!-- 글쓰기 -->
+	<insert id="insert" parameterType="Faq">
+		insert into FAQ values(FAQ_SEQ.nextval, #{ftitle}, #{fcontent}, SYSDATE)
+	</insert>
+	<!-- 선택한 글 내용 가져오기 -->
+	<select id="selectBySeq" resultType="Faq" parameterType="long">
+		select * from FAQ where FSEQ=#{fseq}
+	</select>
+	<!-- 글 삭제 -->
+	<delete id="delete" parameterType="long">
+		delete from FAQ where FSEQ=#{fseq}
+	</delete>
+	<!-- 글 수정 -->
+	<update id="update" parameterType="Faq">
+		update FAQ set FTITLE=#{ftitle}, FCONTENT=#{fcontent} where FSEQ=#{fseq}
+	</update>
+</mapper>
