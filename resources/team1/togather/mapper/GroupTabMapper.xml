@@ -182,7 +182,7 @@
 	<select id="galleryPageCount" resultType="Integer">
 		select count(*) from GROUP_GALLERY where gseq=#{gseq}
 	</select>
-	<!-- 갤러리 사진 삭제시 본인 체 -->
+	<!-- 갤러리 사진 삭제시 본인 체크 -->
 	<select id="writerCheck" resultType="Integer">
 		select count(*) from GROUP_GALLERY where galseq=#{galseq} and mnum=#{mnum}
 	</select>
