@@ -446,20 +446,4 @@ public class GatheringController {
 		return "gathering/searchMap";
 	}
 
-//	private long getGaSeq(HttpServletRequest request) {
-//		long ga_seq = -1;
-//		String ga_seqStr = request.getParameter("ga_seq");
-//		if(ga_seqStr != null) {
-//			ga_seqStr = ga_seqStr.trim();
-//			if(ga_seqStr.length() != 0) {
-//				try {
-//					ga_seq = Long.parseLong(ga_seqStr);
-//					return ga_seq;
-//				}catch(NumberFormatException nfe) {}
-//			}
-//		}
-//		return ga_seq;
-//	}
-//	
-
 }
