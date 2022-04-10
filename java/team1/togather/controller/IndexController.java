@@ -226,8 +226,18 @@ public class IndexController {
 				li.setMname(kingName);
 			}
 		}
-
 		return groupList;
-}
+	}
+	//	대현추가
+	@GetMapping("contact")
+	public ModelAndView contactUs() {
+		long membercount = memberService.memberCount();
+		long groupcount = groupTabService.groupCount();
+		long gatheringcount = gatheringService.gatheringCount();
+		ModelAndView mv = new ModelAndView("contactUs", "membercount", membercount);
+		mv.addObject("groupcount",groupcount);
+		mv.addObject("gatheringcount", gatheringcount);
+		return mv;
+	}
 
 }

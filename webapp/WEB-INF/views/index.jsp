@@ -416,7 +416,7 @@
                         <li><a href="notification/notice">공지사항</a></li>
                         <li><a href="faq/listPage">자주묻는 질문</a></li>
                         <li><a href="qa">Q&A</a></li>
-                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="contact">Contact</a></li>
                     </ul>
                 </li>
 

@@ -139,38 +139,38 @@
         <h1 class="logo me-auto"><a href="../">Togather</a></h1>
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-		
+
         <nav id="navbar" class="navbar order-last order-lg-0">
           <ul>
-            <li><a class="active" href="../">Home</a></li>
-            <li><a href="about.html">About</a></li>
-			<li><a href="../board/listPage">게시판</a></li>          
-          <c:if test="${m ne null}">
-            <li><a href="../groupTab/myGroup.do?mnum=${m.mnum }">나의 모임</a></li><!--로그인시에만 보이게 하기-->
-          	<li><a href="../wishTab/wishList?mnum=${m.mnum }">찜목록
-              <span id="numberOfWish" class="badge bg-dark text-white ms-1 rounded-pill">${wishsize }</span>
+            <li><a href="../">Home</a></li>
+            <li><a href="../about">About</a></li>
+            <li><a href="../board/listPage">게시판</a></li>
+            <c:if test="${m ne null}">
+              <li><a href="../groupTab/myGroup.do?mnum=${m.mnum }">나의 모임</a></li><!--로그인시에만 보이게 하기-->
+              <li><a href="../wishTab/wishList?mnum=${m.mnum }">찜목록
+                <span id="numberOfWish" class="badge bg-dark text-white ms-1 rounded-pill">${wishsize }</span>
               </a></li>
-           </c:if>
+            </c:if>
             <li class="dropdown">
               <a href="#"
-                ><span>고객지원</span> <i class="bi bi-chevron-down"></i
+              ><span>고객지원</span> <i class="bi bi-chevron-down"></i
               ></a>
               <ul>
                 <li><a href="../notification/notice">공지사항</a></li>
                 <li><a href="../faq/listPage">자주묻는 질문</a></li>
                 <li><a href="../qa">Q&A</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="../contact">Contact</a></li>
               </ul>
             </li>
-            
-           <c:choose>
-           		<c:when test="${m eq null}">
-            		<li><a href="../member/login.do">로그인 ${sessionScope.m} </a></li>
-        		</c:when>
-          		<c:otherwise>
-            		<li><a href="javascript:void(0);" onclick="signout();">로그아웃</a></li>
-            	</c:otherwise>
-         </c:choose>
+
+            <c:choose>
+              <c:when test="${m eq null}">
+                <li><a href="../member/login.do">로그인 ${sessionScope.m} </a></li>
+              </c:when>
+              <c:otherwise>
+                <li><a href="javascript:void(0);" onclick="signout();">로그아웃</a></li>
+              </c:otherwise>
+            </c:choose>
           </ul>
           <i class="bi bi-list mobile-nav-toggle"></i>
 
@@ -179,16 +179,40 @@
 
         <!--로그인전에는 회원가입만 보이고 로그인하면 모임만들기만 보이게 하는건 어떤지??-->
         <c:choose>
-           		<c:when test="${m eq null}">
-		        	<a href="../member/joinform.do" class="get-started-btn">회원가입</a>
-		        </c:when>
-		        <c:otherwise> 
-        			<a href="../groupTab/groupCreate.do" class="get-started-btn">모임만들기</a>
-        		</c:otherwise>
-         </c:choose>
-        
-        
+          <c:when test="${m eq null}">
+            <a href="../member/joinform.do" class="get-started-btn">회원가입</a>
+          </c:when>
+          <c:otherwise>
+            <a href="../groupTab/groupCreate.do" class="get-started-btn">모임만들기</a>
+          </c:otherwise>
+        </c:choose>
+
+
       </div>
+      <script src="http://code.jquery.com/jquery-latest.js"></script>
+      <script>
+        function cancelWishList(e){
+          console.log($(e).val());
+          var data = JSON.stringify({
+            gseq:$(e).val()
+
+          });
+          $.ajax({
+            url:"../cancelWishList",
+            type:"POST",
+            dataType:"json",
+            contentType:"application/json",
+            data:data,
+            success: function(result){
+              console.log("success!: "+result);
+              $(e).parents('.col-lg-4').remove();
+            },
+            error:function(error){
+              console.log("failure!: "+error);
+            }
+          });
+        }
+      </script>
     </header>
     <!-- End Header -->
 
@@ -197,7 +221,6 @@
       <div class="breadcrumbs">
         <div class="container">
           <h2>자유게시판</h2>
-          <p>자유게시판 설명</p>
         </div>
       </div>
       <!-- End Breadcrumbs -->

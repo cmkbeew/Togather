@@ -58,13 +58,13 @@
 
         <nav id="navbar" class="navbar order-last order-lg-0">
           <ul>
-            <li><a class="active" href="/">Home</a></li>
-            <li><a href="about.html">About</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
             <li><a href="groupTab/myGroup.do?mnum=${m.mnum }">나의 모임</a></li>
             <!--로그인시에만 보이게 하기-->
-            <li><a href="boardMain.html">게시판</a></li>
+            <li><a href="../board/listPage">게시판</a></li>
             <li>
-              <a href="wishlist.html"
+              <a href="../wishTab/wishList?mnum=${m.mnum }"
                 >찜목록
                 <span class="badge bg-dark text-white ms-1 rounded-pill"
                   >0</span
@@ -77,8 +77,8 @@
                 ><span>고객지원</span> <i class="bi bi-chevron-down"></i
               ></a>
               <ul>
-                <li><a href="notice.html">공지사항</a></li>
-                <li><a href="FAQ.html">자주묻는 질문</a></li>
+                <li><a href="../notification/notice">공지사항</a></li>
+                <li><a href="../faq/listPage">자주묻는 질문</a></li>
                 <li><a href="../qa">Q&A</a></li>
                 <li><a href="contact.html">Contact</a></li>
               </ul>
@@ -112,7 +112,7 @@
       <div class="breadcrumbs">
         <div class="container">
           <h1>나의 모임</h1>
-          <p>xxx님께서 가입중인 모임 입니다.</p>
+          <p>${m.mname}님께서 가입중인 모임 입니다.</p>
         </div>
       </div>
       <!-- End Breadcrumbs -->
@@ -122,7 +122,7 @@
         <div class="container" data-aos="fade-up">
           <div class="row" data-aos="zoom-in" data-aos-delay="100">
             <c:forEach items="${list}" var="myGrouplist" varStatus="status">
-	            <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+	            <div class="col-lg-4 col-md-6 d-flex align-items-stretch mb-4">
 	              <div class="course-item">
 	                <img
 	                  src="/assets/img/course-1.jpg"

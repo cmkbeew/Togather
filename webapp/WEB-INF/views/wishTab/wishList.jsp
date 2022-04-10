@@ -59,8 +59,8 @@
 		
         <nav id="navbar" class="navbar order-last order-lg-0">
           <ul>
-            <li><a class="active" href="../">Home</a></li>
-            <li><a href="about.html">About</a></li>
+            <li><a href="../">Home</a></li>
+            <li><a href="../about">About</a></li>
 			<li><a href="../board/listPage">게시판</a></li>          
           <c:if test="${m ne null}">
             <li><a href="../groupTab/myGroup.do?mnum=${m.mnum }">나의 모임</a></li><!--로그인시에만 보이게 하기-->
@@ -76,7 +76,7 @@
                 <li><a href="../notification/notice">공지사항</a></li>
                 <li><a href="../faq/listPage">자주묻는 질문</a></li>
                 <li><a href="../qa">Q&A</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="../contact">Contact</a></li>
               </ul>
             </li>
             
