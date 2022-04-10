@@ -18,5 +18,5 @@ public class Gathering {
 	private int ga_limit;
 	private long gseq;
 	private long mnum;
-	
+	//github테스트
 }

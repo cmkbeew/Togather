@@ -180,7 +180,7 @@
                 success: function(data){
                     if(data == 0){
                         Swal.fire({
-                            title: '모임장이 탈퇴하면 맨 위의 멤버에게 모임장을 위임합니다.',
+                            title: '모임장이 탈퇴하면 맨 위의 </br> 멤버에게 모임장을 위임합니다.',
                             icon: 'question',
                             showCancelButton: true,
                             confirmButtonColor: '#3085d6',
