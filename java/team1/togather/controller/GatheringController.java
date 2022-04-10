@@ -441,25 +441,12 @@ public class GatheringController {
 			System.out.println(jsonX.get("y").toString());
 		}
 	}
-	@GetMapping("gatheringSearchMap.do")
-	public String gatheringSearchMap() {
-		return "gathering/searchMap";
-	}
 
-//	private long getGaSeq(HttpServletRequest request) {
-//		long ga_seq = -1;
-//		String ga_seqStr = request.getParameter("ga_seq");
-//		if(ga_seqStr != null) {
-//			ga_seqStr = ga_seqStr.trim();
-//			if(ga_seqStr.length() != 0) {
-//				try {
-//					ga_seq = Long.parseLong(ga_seqStr);
-//					return ga_seq;
-//				}catch(NumberFormatException nfe) {}
-//			}
-//		}
-//		return ga_seq;
-//	}
-//	
+	@GetMapping("gatheringSearchMap.do")
+	public ModelAndView gatheringSearchMap(String place) {
+		System.out.println("place: "+place);
+		ModelAndView mv = new ModelAndView("gathering/searchMap","place",place);
+		return mv;
+	}
 
 }
