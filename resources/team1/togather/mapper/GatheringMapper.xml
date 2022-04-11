@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="team1.togather.mapper.GatheringMapper">
+		<select id="ga_selectByGaSeq" resultType="Gathering" parameterType="long">
+			select * from GATHERING where GA_SEQ=#{ga_seq}
+		</select>
+		<select id="ga_selectByGseq" resultType="Gathering" parameterType="long">
+			select * from GATHERING where GSEQ=#{gseq}
+		</select>
+		<insert id="ga_insert" parameterType="Gathering">
+			insert into GATHERING values(GATHERING_SEQ.nextval, #{ga_name}, #{ga_date}, #{time}, #{ga_place}, #{price}, #{ga_limit}, #{gseq}, #{mnum})
+		</insert>
+		<update id="ga_update" parameterType="Gathering">
+			update GATHERING set GA_NAME=#{ga_name}, TIME=#{time}, GA_PLACE=#{ga_place}, PRICE=#{price}, GA_LIMIT=#{ga_limit} where GA_SEQ=#{ga_seq}
+		</update>
+		<delete id="ga_delete" parameterType="long">
+			delete from GATHERING where ga_seq=#{ga_seq}
+		</delete>
+		<!-- 인덱스 정모 갯수 -->
+		<select id="gatheringCount" resultType="long">
+			select count(*) from GATHERING
+		</select>
+		<!-- 정모 안에 참여 인원을 구하는 sql -->
+		<select id="gatheringMemberCount" resultType="Long">
+			select count(*) from MEM_IN_GATHERING where ga_seq=#{ga_seq}
+		</select>
+		<!-- 정모장 이름을 구하는 sql -->
+		<select id="gatheringCreaterName" resultType="Member">
+			select mname from member where mnum=(select mnum from GATHERING where ga_seq=#{ga_seq})
+		</select>
+		<!-- 정모 info에서 정모에 참여한 사람인지 구하는 sql -->
+		<select id="memInGatheringCheck" resultType="Long" >
+			select mnum from MEM_IN_GATHERING where ga_seq=(select ga_seq from GATHERING where ga_seq=#{ga_seq}) and mnum=#{mnum}
+		</select>
+		<!-- 정모 참여하는 sql -->
+		<insert id="memInGathering" parameterType="MemInGathering">
+			insert into MEM_IN_GATHERING values(#{ga_seq}, #{mnum}, 2)
+		</insert>
+		<!-- 정모 참여 취소 sql -->
+		<delete id="gatheringQuit" parameterType="MemInGathering">
+			delete MEM_IN_GATHERING where mnum=#{mnum} and ga_seq=#{ga_seq}
+		</delete>
+		<!-- 모임 수정할때 권한 구하는 sql -->
+		<select id="grade" resultType="Long">
+			select grade from MEM_IN_GATHERING where mnum=#{mnum} and ga_seq=#{ga_seq}
+		</select>
+		<!-- 정모 참여자 이름 구하는 sql -->
+		<select id="memInGatheringName" resultType="HashMap" parameterType="MemInGathering">
+			select mname, mnum, grade from member natural join MEM_IN_GATHERING where ga_seq =#{ga_seq} order by grade
+		</select>
+		<!-- 정모 삭제시 참여자 삭제 sql -->
+		<delete id="memInGatheringDelete" parameterType="long">
+			delete MEM_IN_GATHERING where ga_seq=#{ga_seq}
+		</delete>
+		<!-- 모임 생성시 생성한 모임 인포로 가는 sql -->
+		<select id="insertGatheringInfo" resultType="Gathering" parameterType="Gathering">
+			select * from GATHERING where ga_seq=(select max(ga_seq) from GATHERING where mnum=#{mnum})
+		</select>
+		
+		<select id="gatheringPage" resultType="Gathering" parameterType="Integer">
+			select * from (select ROWNUM rnum, aa.* from 
+		 	(select * from gathering order by ga_seq desc) aa where gseq=#{gseq}) 
+		 	where rnum between #{page} and #{page}+10
+		</select>
+		
+		<!-- 모임목록 페이징 (지정한 크기만큼 가져오기) -->
+		<select id="gatheringPageCri" resultType="Gathering" parameterType="GatheringCriteria">
+		 	<![CDATA[
+		 	select * from (select ROWNUM rnum, aa.* from 
+		 	(select * from gathering order by ga_seq desc) aa where gseq=#{gseq}) 
+		 	where rnum>#{startRow} and rnum<#{endRow}
+			]]>
+		</select>
+		<select id="pageCount" resultType="Integer" >
+			select count(*) from Gathering where gseq=#{gseq}
+		</select>
+		
+	</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+   <typeAliases>
+	  <typeAlias alias="BoardCriteria" type="team1.togather.domain.BoardCriteria"/>
+      <typeAlias alias="Board" type="team1.togather.domain.Board"/>
+      <typeAlias alias="Reply" type="team1.togather.domain.Reply"/>
+      <typeAlias alias="WishList" type="team1.togather.domain.WishList"/>
+      <typeAlias alias="Block" type="team1.togather.domain.Block"/>
+      <typeAlias alias="GroupTab" type="team1.togather.domain.GroupTab"/>
+      <typeAlias alias="Member" type="team1.togather.domain.Member"/>
+      <typeAlias alias="MemInGroup" type="team1.togather.domain.MemInGroup"/>
+      <typeAlias alias="Category" type="team1.togather.domain.Category"/>
+      <typeAlias alias="QA" type="team1.togather.domain.QandA"/>
+	  <typeAlias alias="QaReply" type="team1.togather.domain.QaReply"/>
+	  <typeAlias alias="Message" type="team1.togather.domain.Message"/>
+	  <typeAlias alias="IndexCriteria" type="team1.togather.domain.IndexCriteria"/>
+	  <typeAlias alias="Gathering" type="team1.togather.domain.Gathering"/>
+	  <typeAlias alias="MemInGathering" type="team1.togather.domain.MemInGathering"/>
+	  <typeAlias alias="GatheringCriteria" type="team1.togather.domain.GatheringCriteria"/>
+	  <typeAlias alias="Faq" type="team1.togather.domain.Faq"/>
+	  <typeAlias alias="FaqVo" type="team1.togather.domain.FaqVo"/>
+	  <typeAlias alias="Notification" type="team1.togather.domain.Notification"/>
+	  <typeAlias alias="NotificationCriteria" type="team1.togather.domain.NotificationCriteria"/>
+   </typeAliases>
+    
+   <!-- 
+   <mappers>
+        <mapper resource="team1/togather/mapper/BoardMapper.xml"/>
+        <mapper resource="team1/togather/mapper/ReplyMapper.xml"/>
+   </mappers>
+   -->
+</configuration>

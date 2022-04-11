@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team1.togather.mapper.MemberMapper">
+	
+	<select id="joincheck" resultType="int" parameterType="String">
+		select count(*) from member where phone =#{phone}
+	</select>
+	
+	<select id="joincheck2" resultType="int" parameterType="String">
+		select count(*) from member where email =#{email}
+	</select>
+	
+	<select id="logincheck"  resultType="Member" parameterType="String">
+		select * from member where phone =#{phone} 
+	</select>
+	
+	<select id="memberCount"  resultType="long" >
+		select count(*) from member 
+	</select>
+	
+	<select id="kakaologincheck"  resultType="int" parameterType="String">
+		select count(*) from member where email =#{email} 
+	</select>
+	
+	<select id="kakaologin"  resultType="Member" parameterType="String">
+		select * from member where email =#{email} 
+	</select>
+	<!-- 그룹인포에서 멤버이름눌렀을때 회원정보 가져오기 -->
+	<select id="memberInfo"  resultType="Member" parameterType="long">
+		select * from member where mnum=(select mnum from MEM_IN_GROUP where gseq=#{gseq} and mnum=#{mnum}) 
+	</select>
+	<!-- 그룹인포에서 멤버이름눌렀을때 내가 차단한 회원번호 가져오기 -->
+	<select id="blockedNumList"   parameterType="Block">
+		select blocked from block where blocking=#{blocking} 
+	</select>
+	<!-- 그룹인포에서 멤버이름눌렀을때 내가 차단한 회원이름 가져오기 -->
+	<select id="blockedNameList"  resultType="String" parameterType="Long">
+		select mname from member where mnum=any(select blocked from block where blocking=#{mnum}) 
+	</select>
+	<!-- 차단하기 -->
+	<insert id="blocking" parameterType="Block">
+		insert into block values(BLOCK_SEQ.nextval,#{blocking},#{blocked})
+	</insert>
+	<!-- 차단해제하기 -->
+	<delete id="blockingCancel" parameterType="Block">
+		delete block where blocking=#{blocking} and blocked=#{blocked}
+	</delete>
+	<!-- 회원가입하기 -->
+	<insert id="join" parameterType="String" >
+	     insert into MEMBER values(
+	     MEMBER_SEQ.nextval,#{maddr}, #{pfr_loc},#{mname},
+	     #{gender},#{birth},#{pwd},#{email},#{phone},
+	     #{category_first},
+	     #{category_second,jdbcType=VARCHAR},
+		 #{category_third,jdbcType=VARCHAR},
+	     default)
+	</insert>
+	<!-- 메세지 보내기 -->
+	<insert id="sendMessage" parameterType="Message" >
+	     insert into message values(
+	     MESSAGE_SEQ.nextval,#{to_mname},#{to_mnum},
+	     #{from_mnum},#{from_mname},#{metitle},#{mecontent},default,default,SYSDATE)
+	</insert>
+	<!-- 메세지 알림뜨게 체크 view체크 가져오기 -->
+	<select id="messageViewCheck" resultType="Long" parameterType="Long">
+		select count(*) from MESSAGE where from_mnum=#{mnum} and viewcheck=0
+	</select>
+	<!-- 메세지 알림끄기 -->
+	<update id="viewChecked" parameterType="Long">
+			update MESSAGE set viewcheck=1 where from_mnum=#{mnum}
+	</update>
+	<!-- 내용 확인한 메세지만 알림끄기 -->
+	<update id="messageChecked" parameterType="Long">
+			update MESSAGE set mecheck=1 where meseq=#{meseq}
+	</update>
+	<!-- 본인 메세지 리스트 가져오기 -->
+	<select id="messageList" resultType="Message" parameterType="Map">
+		<![CDATA[
+		select * from (select ROWNUM rnum, aa.* from 
+			(select * from message where from_mnum=#{mnum} 
+			order by meseq desc) aa) where rnum>#{startRow} and rnum<=#{endRow}
+		]]>
+	</select>
+	<!-- 본인메세지의 총갯수 -->
+	<select id="messageCount" resultType="Integer" parameterType="Long">
+		select count(*) from message where from_mnum=#{mnum}
+	</select>
+	<!-- 메세지 내용 가져오기 -->
+	<select id="messageContent" resultType="Message" parameterType="long">
+		select * from MESSAGE where meseq=#{meseq} 
+	</select>
+	<!-- 메세지 답변 보내기 -->
+	<insert id="replyToMessage" parameterType="Message" >
+	     insert into message values(
+	     MESSAGE_SEQ.nextval,#{to_mname},#{to_mnum},
+	     #{from_mnum},#{from_mname},#{metitle},#{mecontent},default,default,SYSDATE)
+	</insert>
+	<!-- 메세지 삭제하기 -->
+	<delete id="messageDelete" parameterType="Long">
+		delete message where meseq=#{meseq} 
+	</delete>
+	<!-- 다음 메세지 -->
+	<select id="nextPostMessage" resultType="Long" parameterType="long">
+		select min(meseq) from message where meseq >(select meseq from message where meseq=#{meseq}) and from_mnum=#{from_mnum} order by meseq desc
+	</select>
+	<!-- 이전 메세지 -->
+	<select id="previousMessage" resultType="Long" parameterType="long">
+		 <![CDATA[select max(meseq) from message where meseq <(select meseq from message where meseq=#{meseq}) and from_mnum=#{from_mnum} order by meseq desc]]>
+	</select>
+	<!-- 회원가입 첫번째 카테고리 리스트 가져오기 -->
+	<select id="firstCategory" resultType="Category">
+		select DISTINCT int_out from category
+	</select>
+	<!-- 회원가입 두번째 카테고리 리스트 가져오기 -->
+	<select id="secondCategory" resultType="Category">
+		select DISTINCT INT_IN from category where int_out=#{int_out}
+	</select>
+	<!-- 회원가입 세번째 카테고리 리스트 가져오기 -->
+	<select id="thirdCategory" resultType="Category">
+		select DISTINCT FIRST_OPTION from category where INT_IN=#{int_in}
+	</select>
+	
+</mapper>
+

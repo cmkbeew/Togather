@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team1.togather.mapper.MyPageMapper">
+	<!-- 세션 가져와서 개인정보 뽑기 // 카테고리  셀렉으로 뽑기-->
+	<select id ="list" parameterType="long" resultType="Member">
+		select * from MEMBER where mnum = #{mnum}
+	</select>	
+	<!-- 비밀번호 일치하는지 비교 -->
+	<select id="nowpasswordcheck"  resultType="Member" parameterType="String">
+		select * from member where phone =#{phone} 
+	</select>
+	<!-- 일치하면 업데이트  -->
+	<update id = "updatepassword"  parameterType = "Member">
+		update Member set PWD = #{pwd} where mnum = #{mnum}
+	</update>
+	<!-- 이메일 db에 있는거랑 비교 -->
+	<select id="emailcheck" resultType="int" parameterType="String">
+		select count(*) from member where email =#{email}
+	</select>
+	<!-- 이메일 업데이트 -->
+	<update id ="updateemail" parameterType = "Member">
+		update Member set EMAIL = #{email} where mnum = #{mnum}
+	</update>
+	<update id ="updatemaddrandpfr_loc" parameterType = "Member">
+		 update Member set 
+		 pfr_loc = #{pfr_loc}, 
+		 maddr = #{maddr}	  
+		 where mnum = #{mnum}
+	</update>
+	
+	<!-- 회원가입 첫번째 카테고리 리스트 가져오기 -->
+	<select id="firstCategory" resultType="Category">
+		select DISTINCT int_out from category
+	</select>
+	<!-- 회원가입 두번째 카테고리 리스트 가져오기 -->
+	<select id="secondCategory" resultType="Category">
+		select DISTINCT INT_IN from category where int_out=#{int_out}
+	</select>
+	<!-- 회원가입 세번째 카테고리 리스트 가져오기 -->
+	<select id="thirdCategory" resultType="Category">
+		select DISTINCT FIRST_OPTION from category where INT_IN=#{int_in}
+	</select>
+	<update id = "updateCategory" parameterType = "Member"> 
+		update Member 
+		<trim prefix="SET" suffixOverrides=",">
+				category_first =#{category_first},
+			<if test="category_second != null and category_second !=''">
+				category_second =#{category_second},
+			</if>
+			<if test="category_third != null and category_third !=''">
+				category_third =#{category_third}
+			</if>
+		</trim>
+		where mnum = #{mnum}
+	</update>
+</mapper>

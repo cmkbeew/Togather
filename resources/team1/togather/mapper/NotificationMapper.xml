@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team1.togather.mapper.NotificationMapper">
+		<!--리스트 페이지 -->
+	<select id="listPage" resultType="Notification" parameterType="Integer">
+	select * from (select ROWNUM rnum, aa.* from (select * from Notification order by mnum desc) aa)
+   		where rnum between #{page} and #{page}+10
+	</select>
+	
+	<!-- 페이지정보를 지정한 크기만큼 가져오기 -->
+	<select id="listPageCri" resultType="Notification" parameterType="NotificationCriteria">
+		<![CDATA[
+	   		select * from (select ROWNUM rnum, aa.* from (select * from Notification order by nseq desc) aa)
+	   		where rnum>#{startRow} and rnum<=#{endRow}
+	   		]]>
+	</select>
+	
+	
+	<!-- 검색 -->
+	<select id="getNotificationBySearch" parameterType="Map" resultType="Notification">
+    	<![CDATA[
+	   		select * from (select ROWNUM rnum, aa.* from (select * from Notification where ${option} like '%'||#{notificationSearch}||'%' order by nseq desc) aa)
+	   		where rnum>#{startRow} and rnum<=#{endRow}
+	   	]]>
+    </select>
+    
+    <!-- 상세내용 -->
+    <select id="getNotificationContent" parameterType="Long" resultType="Notification">
+    	select * from Notification where nseq=#{nseq}
+    </select>
+    
+    <!-- 페이지 -->
+    <select id="pageCount" resultType="Integer" >
+			select count(*) from Notification 
+	</select>
+	
+	<!-- 조회수  -->
+	 <update id = "updateNView" parameterType="Long">
+   		update Notification set NVIEW=(select NVIEW+1 from Notification where nseq = #{nseq}) where nseq=#{nseq} 
+    </update> 
+	
+	<insert id = "insert" parameterType = "Notification">
+		insert into Notification values(NSEQ_SEQ.nextval,#{mnum},#{mname},#{ntitle},#{ncontent},0,SYSDATE)	
+	</insert>
+	
+	<update id = "update" parameterType = "Notification">
+		update Notification set ntitle=#{ntitle}, ncontent=#{ncontent}  where nseq = #{nseq}
+	</update>
+	<delete id = "delete" parameterType = "long">
+		delete  from Notification where nseq = #{nseq}
+	</delete>
+ 
+	 
+</mapper>
+
+	
