@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team1.togather.mapper.GBoardMapper">
+	
+	
+	<select id="gblistPageCri" resultType="GBoard" parameterType="GBoardCriteria">
+		<![CDATA[
+	   		select * from (select ROWNUM rnum, aa.* from (select * from GROUPTAB_BOARD order by gbnum desc) aa)
+	   		where rnum>#{startRow} and rnum<=#{endRow} and gseq=#{gseq} 
+	   		]]>
+	</select>
+	<select id="gbpageCount" resultType="Integer" parameterType="long" >
+			select count(*) from GROUPTAB_BOARD where gseq=#{gseq}
+	</select>
+	
+	<select id="selectgbnum" resultType="GBoard" parameterType="long">
+	     select * from GROUPTAB_BOARD where GBNUM=#{GBNUM} 
+	</select>
+	
+	<insert id="gbinsert" parameterType="GBoard">
+	    insert into GROUPTAB_BOARD values(GB_NUM_SEQ.nextval, #{gbtitle}, #{mnum}, #{mname}, #{gbcontent}, #{gblike, jdbcType=NUMERIC}, #{gbview}, SYSDATE, #{gseq}, #{gbfname, jdbcType = VARCHAR}, #{gbofname, jdbcType = VARCHAR}, #{gbfsize, jdbcType=NUMERIC})
+	</insert>
+	<update id="gbupdate" parameterType="GBoard">
+        update GROUPTAB_BOARD set GBTITLE=#{gbtitle}, GBCONTENT=#{gbcontent}, RDATE=SYSDATE where GBNUM=#{gbnum}
+	</update>
+	<delete id="gbdelete" parameterType="long">
+	    delete from GROUPTAB_BOARD where GBNUM=#{gbnum}
+	</delete>
+	
+	<select id="getGBoardBySearch" parameterType="Map" resultType="GBoard">
+    	<![CDATA[
+	   		select * from (select ROWNUM rnum, aa.* from (select * from GROUPTAB_BOARD where ${option} like '%'||#{gboardSearch}||'%' and gseq=#{gseq}  order by gbnum desc) aa)
+	   		where rnum>#{startRow} and rnum<=#{endRow} 
+	   	]]>
+    </select>
+    <select id="selectgseq" resultType="GBoard" parameterType="long">
+	     select * from GROUPTAB_BOARD where GSEQ=#{GSEQ} 
+	</select>
+	 <update id = "updateGBView" parameterType="Long">
+   		update GROUPTAB_BOARD set GBVIEW=(select GBVIEW+1 from GROUPTAB_BOARD where GBNUM=#{gbnum}) where GBNUM=#{gbnum} 
+   </update> 
+    
+</mapper>
+

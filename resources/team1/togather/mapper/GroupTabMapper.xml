@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team1.togather.mapper.GroupTabMapper">
+	<!-- 로그인했을때 인덱스에 자기 관심사 그룹 보여주기  -->
+	<select id="loginGroupList" resultType="GroupTab" parameterType="Map">
+			<![CDATA[
+		select * from (select ROWNUM rnum, aa.* from
+			(select * from grouptab where interest = any(SELECT email FROM MEMBER where MNUM =#{mnum}
+														 UNION ALL
+														 SELECT CATEGORY_FIRST FROM MEMBER WHERE MNUM = #{mnum}
+														 UNION ALL
+														 SELECT CATEGORY_SECOND FROM MEMBER WHERE MNUM = #{mnum}
+														 UNION ALL
+														 SELECT CATEGORY_THIRD FROM MEMBER WHERE MNUM = #{mnum}
+														 INTERSECT
+														 SELECT INTEREST FROM GROUPTAB )order by gseq desc) aa )where rnum>#{startRow} and rnum<=#{endRow}
+		]]>
+		</select>
+	<!-- 로그인했을때 관심사 그룹들의 모임장이름 -->
+	<select id="groupMemberNames" resultType="String" parameterType="Map">
+		<![CDATA[
+		select mname from member m,(select mnum from (select ROWNUM rnum, aa.* from
+			(select * from grouptab where interest = any(SELECT email FROM MEMBER where MNUM =#{mnum}
+														 UNION ALL
+														 SELECT CATEGORY_FIRST FROM MEMBER WHERE MNUM = #{mnum}
+														 UNION ALL
+														 SELECT CATEGORY_SECOND FROM MEMBER WHERE MNUM = #{mnum}
+														 UNION ALL
+														 SELECT CATEGORY_THIRD FROM MEMBER WHERE MNUM = #{mnum}
+														 INTERSECT
+														 SELECT INTEREST FROM GROUPTAB)
+			 order by gseq desc) aa )where rnum >#{startRow} and rnum<=#{endRow}) a where m.mnum=a.mnum
+		]]>
+		</select>
+	<!--  로그인했을때 총 페이지갯수가져오는 -->
+	<select id="pageCount" resultType="Integer" parameterType="Member">
+		select count(*) from (select * from grouptab where interest = any(SELECT email FROM MEMBER where MNUM =#{mnum}
+																		  UNION ALL
+																		  SELECT CATEGORY_FIRST FROM MEMBER WHERE MNUM = #{mnum}
+																		  UNION ALL
+																		  SELECT CATEGORY_SECOND FROM MEMBER WHERE MNUM = #{mnum}
+																		  UNION ALL
+																		  SELECT CATEGORY_THIRD FROM MEMBER WHERE MNUM = #{mnum}
+																		  INTERSECT
+																		  SELECT INTEREST FROM GROUPTAB )order by gseq desc)
+	</select>
+	<!-- 로그인했을때 카테고리에 맞는 그룹이 없을때 총 페이지갯수가져오는 -->
+	<select id="notCategorypageCount" resultType="Integer">
+		select count(*) from groupTab
+	</select>
+	<!-- 로그인 안했거나 본인 관심사에 관한 그룹이 없을때 인덱스 페이지   -->
+	<select id="selectAll" resultType="GroupTab" parameterType="IndexCriteria">
+			<![CDATA[
+		select * from (select ROWNUM rnum, aa.* from (select * from groupTab order by gseq desc) aa)
+		where rnum>#{startRow} and rnum<=#{endRow}
+		]]>
+		</select>
+	<!-- 로그인 안했거나 본인 관심사에 관한 그룹이 없을때 인덱스 페이지 모임장 이름   -->
+	<select id="NoCategoryNames" resultType="String" parameterType="IndexCriteria">
+			<![CDATA[
+		select m.mname  from member m , (select mnum from (select ROWNUM rnum, aa.* from (select * from groupTab order by gseq desc) aa)
+										 where rnum>#{startRow}  and rnum<=#{endRow}) a where m.mnum = a.mnum
+		]]>
+		</select>
+	<!-- 마이그룹이름   -->
+	<select id="selectAllname" resultType="String">
+		select m.mname from member m,grouptab g where m.mnum=g.mnum and m.mnum=#{mnum} order by gseq desc
+	</select>
+	<select id="selectByGSeq" resultType="GroupTab" parameterType="long">
+		select * from GROUPTAB where GSEQ=#{gseq}
+	</select>
+	<insert id="insert" parameterType="GroupTab">
+		insert into GROUPTAB values(GROUPTAB_SEQ.nextval, #{gloc}, #{gname}, #{gintro}, #{interest}, #{limit}, SYSDATE, #{mnum}, #{fname})
+	</insert>
+	<update id="update" parameterType="GroupTab">
+		update GROUPTAB set GLOC=#{gloc}, GNAME=#{gname}, GINTRO=#{gintro}, LIMIT=#{limit} WHERE GSEQ=#{gseq}
+	</update>
+	<delete id="delete" parameterType="long">
+		delete from GROUPTAB where GSEQ=#{gseq}
+	</delete>
+	<!-- 인덱스 그룹 갯수 -->
+	<select id="groupCount" resultType="long">
+		select count(*) from GROUPTAB
+	</select>
+	<!-- 그룹인포안에 현재가입인원수 구하는 sql -->
+	<select id="groupMemberCount" resultType="Long">
+		select count(*) from mem_in_group where gseq=#{gseq}
+	</select>
+	<!-- 그룹인포안에 모임장 이름 구하는 sql -->
+	<select id="groupInfoMemberName" resultType="Member">
+		select mname from member where mnum=(select mnum from grouptab where gseq=#{gseq})
+	</select>
+	<!-- 그룹가입하는 sql -->
+	<insert id="memInGroup" parameterType="MemInGroup">
+		insert into MEM_IN_GROUP values(#{gseq},#{mnum},2)
+	</insert>
+	<!-- 그룹가입할때 현재 그룹 LIMIT 가져오는 -->
+	<select id="LIMIT" resultType="long" parameterType="long">
+		select LIMIT from grouptab where gseq=#{gseq}
+	</select>
+	<!-- 그룹 탈퇴하는 sql -->
+	<delete id="groupQuit" parameterType="MemInGroup">
+		delete mem_in_group where mnum=#{mnum} and gseq=#{gseq}
+	</delete>
+	<!-- 모임 삭제하할때 안에있는 멤버들 삭제하는 sql -->
+	<delete id="memInGroupDelete" parameterType="long">
+		delete mem_in_group where gseq=#{gseq}
+	</delete>
+	<!-- 그룹수정할때 그룹 권한구하는 sql -->
+	<select id="grade" resultType="Long">
+		select grade from mem_in_group where mnum=#{mnum} and gseq=#{gseq}
+	</select>
+	<!-- 그룹인포누를때 로그인한 사용자가 모임가입했는지 구하는 sql -->
+	<select id="memInGroupCheck" resultType="Long" >
+		select mnum from mem_in_group where gseq=(select gseq from grouptab where gseq=#{gseq}) and mnum=#{mnum}
+	</select>
+	<!-- 그룹인포 모임멤버 이름 구하는 sql -->
+	<select id="memInGroupName" resultType="HashMap" parameterType="MemInGroup">
+		select m.mname,m.mnum,mi.grade, m.birth, m.maddr from member m,mem_in_group mi where m.mnum=mi.mnum and gseq=#{gseq} order by grade
+	</select>
+	<!-- 그룹인포 모임gseq구하는 sql -->
+	<select id="memInGroupGseq" resultType="long" parameterType="MemInGroup">
+		select mi.gseq from member m,mem_in_group mi where m.mnum=mi.mnum and gseq=#{gseq} order by grade
+	</select>
+	<!-- 나의모임  이름 구하는 sql -->
+	<select id="myGroup"  resultType="GroupTab" parameterType="long">
+		select * from grouptab where gseq=any(select gseq from MEM_IN_GROUP where mnum=#{mnum}) order by GSEQ desc
+	</select>
+	<!-- 그룹만들고  그룹인포로 들어가는  sql -->
+	<select id="insertGroupInfo" resultType="GroupTab" parameterType="GroupTab">
+		select * from grouptab where gseq=(select max(gseq) from grouptab where mnum=#{mnum})
+	</select>
+	<!-- 대현추가 03.26 -->
+	<!-- 그룹 탈퇴시 본인이 만든 정모를 모두 삭제 -->
+	<delete id="quitGroupDeleteGathering" parameterType="long">
+		delete GATHERING where mnum=#{mnum}
+	</delete>
+	<!-- 모임info 안에 보여지는 정모 갯수 -->
+	<select id="gatheringCountInGroup" resultType="Long">
+		select count(*) from GATHERING where gseq=#{gseq}
+	</select>
+
+	<!-- 정모에 현재 시간 보다 큰 정모 계산하기(로그인한사람 정모가져오기) -->
+	<select id="endTime"  resultType="HashMap" parameterType="HashMap">
+		select * from mem_in_gathering mig , gathering g where mig.ga_seq=g.ga_seq and g.gseq=#{gseq} and mig.mnum=#{mnum} order by ga_date desc,time desc
+	</select>
+	<!-- 현재시간보다 큰정모가있으면 그 정모에대한 정보가져오기 -->
+	<select id="endTimeGathring"   resultType="Gathering" parameterType="String">
+		select * from gathering where ga_date =#{ga_date} order by ga_date desc,time asc
+	</select>
+	<!-- 큰정모가있으면 그 정모 만든사람이름 가져오기 -->
+	<select id="endTimeName" resultType="String" parameterType="Long">
+		select mname from member m, grouptab g where m.mnum=g.mnum and g.gseq=(select gseq from grouptab where gseq=#{gseq})
+	</select>
+	<!-- 정모가 오늘(현재시간)이 지났으면 정모삭제하기 -->
+	<delete id="gatheringDelete" parameterType="String">
+		delete gathering where ga_date =#{ga_date}
+	</delete>
+	<!-- 그룹인포에 들어왔을때 정모 참여되어 있는지 가져오기 -->
+	<select id="endTimeNotice"  resultType="MemInGathering" parameterType="Long">
+		select * from mem_in_gathering where ga_seq=#{ga_seq} and mnum=#{mnum}
+	</select>
+	<!-- 정모 남은 시간 알림 끄기 -->
+	<update id="endTimeNoticeChange" parameterType="long">
+		update mem_in_gathering set notice=1 where ga_seq=#{ga_seq} and mnum=#{mnum}
+	</update>
+	<!-- 대현추가 04.05 -->
+	<!-- 페이지정보를 지정한 크기만큼 가져오기 -->
+	<select id="selectPhoto" resultType="GroupTabGallery" parameterType="HashMap">
+			<![CDATA[
+		select * from (select ROWNUM rnum, aa.* from (select * from GROUP_GALLERY order by galseq desc) aa)
+		where rnum>#{startRow} and rnum<=#{endRow} and gseq=#{gseq} order by galseq desc
+		]]>
+		</select>
+	<!-- 사진첩 업로드 -->
+	<insert id="galleryUpload" parameterType="GroupTabGallery">
+		insert into GROUP_GALLERY values(GAL_SEQ.nextval, #{gseq},#{mnum},#{mname},#{pname},#{grade})
+	</insert>
+	<!-- 사진첩 페이지 계산-->
+	<select id="galleryPageCount" resultType="Integer">
+		select count(*) from GROUP_GALLERY where gseq=#{gseq}
+	</select>
+	<!-- 갤러리 사진 삭제시 본인 체크 -->
+	<select id="writerCheck" resultType="Integer">
+		select count(*) from GROUP_GALLERY where galseq=#{galseq} and mnum=#{mnum}
+	</select>
+	<delete id="galleryDelete" parameterType="GroupTabGallery">
+		delete GROUP_GALLERY where galseq=#{galseq}
+	</delete>
+	<!-- 모임장/운영진 위임 및 해제 -->
+	<update id="delegate" parameterType="MemInGroup">
+		update MEM_IN_GROUP set GRADE=#{grade} where GSEQ=#{gseq} and MNUM=#{mnum}
+	</update>
+	<select id="selectKing" resultType="MemInGroup" parameterType="MemInGroup">
+		select * from MEM_IN_GROUP m where GSEQ=#{gseq} and grade>=1 and MNUM=(select min(MNUM) from MEM_IN_GROUP where GSEQ=#{gseq}) order by grade, mnum
+	</select>
+	<!-- 모임이름으로 검색 -->
+	<select id="searchGroup" resultType="GroupTab" parameterType="GroupTab">
+		select * from GROUPTAB where GNAME like '%'||#{gname}||'%' and INTEREST like '%'||#{interest}||'%' and GLOC like '%'||#{gloc}||'%' order by GSEQ desc
+	</select>
+	<select id="kingName" resultType="String" parameterType="long">
+		select mname from member where mnum=(select mnum from grouptab where gseq=#{gseq})
+	</select>
+</mapper>

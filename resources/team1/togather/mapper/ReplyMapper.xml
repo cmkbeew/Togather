@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team1.togather.mapper.ReplyMapper">
+    <select id="getReply" resultType="Reply"  parameterType="Long">
+    	select * from REPLY where BNUM=#{bnum} order by rseq
+    </select>
+    <select id="getR_like" resultType="Long"  parameterType="Long">
+    	select R_LIKE from reply where rseq=#{rseq}
+    </select>
+    
+    <insert id="insert" parameterType="Reply">
+    	insert into REPLY values(RSEQ_SEQ.nextval, #{bnum}, #{mname}, #{mnum}, #{content}, 0, SYSDATE)
+    </insert>
+    <update id="addLike" parameterType="Reply">
+    	update REPLY set R_LIKE=(select R_LIKE+1 from REPLY where RSEQ=#{rseq}) where RSEQ=#{rseq}
+    </update>
+    <update id="cancelLike" parameterType="Reply">
+    	update REPLY set R_LIKE=(select R_LIKE-1 from REPLY where RSEQ=#{rseq}) where RSEQ=#{rseq}
+    </update>
+    <select id="checkRLIKE" parameterType="Map" resultType="Integer">
+    	select FLAG from R_LIKE_TAB where MNUM=#{mnum} and RSEQ=#{rseq}
+    </select>
+    <insert id="insertRLIKE" parameterType="Map">
+    	insert into R_LIKE_TAB values(#{mnum},#{rseq},default)
+    </insert>
+    <delete id="deleteRLIKE" parameterType="Map">
+    	delete from R_LIKE_TAB where mnum=#{mnum} and rseq=#{rseq}
+    </delete>
+</mapper>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team1.togather.mapper.QandA_Mapper">
+	<!-- qna로 들어가면 리스트뽑아주는sql -->
+	<select id="QAlist" resultType="QA" >
+		select * from QA order by qseq desc
+	</select>
+	<select id="qaNameList" resultType="Member">
+		select m.* from member m,qa q where m.mnum=q.mnum order by qseq desc
+	</select>
+	<!-- 제목눌렀을때 내용 들어가는 -->
+	<select id="qaContent" resultType="QA" >
+		select * from QA where qseq=#{qseq}
+	</select>
+	<!-- 제목눌렀을때 내용에서 리플가져오는 sql -->
+	<select id="qreplyList" resultType="QaReply" >
+		select * FROM QAREPLY where qseq=#{qseq}
+	</select>
+	<!-- 리플가져오는 몇개인지 sql -->
+	<select id="qreplyCount" resultType="Long">
+		select count(*) FROM QAREPLY where qseq=#{qseq}
+	</select>
+	<!-- Q&A 리플작성 -->
+	<insert id="qaReply" parameterType="QaReply">
+		INSERT INTO QAREPLY VALUES(QAREPLY_SEQ.NEXTVAL,#{qseq},#{mname},#{mnum},#{qarcontent},SYSDATE)
+	</insert>
+	<!-- qa작성 -->
+	<insert id="qaCreate" parameterType="QA">
+		INSERT INTO QA VALUES(QA_SEQ.NEXTVAL,#{qtitle},#{qcontent},#{mname},#{mnum},0,#{qpwd},SYSDATE)
+	</insert>
+	<!-- qa 만들고  qacontent로 들어가는  sql -->
+	<select id="createqaInfo" resultType="QA" parameterType="QA">
+		select * from QA where qseq=(select max(qseq) from QA where mnum=#{mnum})
+	</select>
+	<!-- qaContent에서 관리자가 다음글로 들어가는  sql -->
+	<select id="nextPost" resultType="Long" parameterType="long">
+		<![CDATA[select min(qseq) from qa where qseq>(select qseq from qa where qseq =#{qseq}) order by qseq]]>
+	</select>
+	<!-- qaContent에서 유저가 다음글로 들어가는  sql -->
+	<select id="nextPostUser" resultType="Long" parameterType="long">
+		<![CDATA[select min(qseq) from qa where qpwd is null and qseq>(select qseq from qa where qseq =#{qseq}) order by qseq]]>
+	</select>
+	<!-- qaContent에서 관리자가 이전글로 들어가는  sql -->
+	<select id="previousPost" resultType="Long" parameterType="long">
+		<![CDATA[select max(qseq) from qa where qseq<(select qseq from qa where qseq =#{qseq}) order by qseq]]>
+	</select>
+	<!-- qaContent에서 유저가 이전글로 들어가는  sql -->
+	<select id="previousPostUser" resultType="Long" parameterType="long">
+		<![CDATA[select max(qseq) from qa where qpwd is null and qseq<(select qseq from qa where qseq =#{qseq}) order by qseq]]>
+	</select>
+	<!-- 여기서부터 페이지 가져오는 -->
+	<select id="pageCount" resultType="Integer" >
+			select count(*) from QA
+	</select>
+	<!-- 페이지정보를 지정한 크기만큼 가져오기 -->
+	<select id="listPageCri" resultType="QA" parameterType="BoardCriteria">
+		<![CDATA[
+	   		select * from (select ROWNUM rnum, aa.* from (select * from QA order by qseq desc) aa)
+	   		where rnum>#{startRow} and rnum<=#{endRow}
+	   		]]>
+	</select>
+	<!-- 비밀번호 -->
+	<select id="pwdQA" resultType="QA" parameterType="QA">
+		SELECT * FROM QA where qpwd=#{qpwd} and qseq=#{qseq}
+	</select>
+	<!-- 수정권한 -->
+	<select id="upDateCheck" resultType="Long" parameterType="QA">
+		SELECT count(*) FROM QA  where mnum=#{mnum} and qseq=#{qseq}
+	</select>
+	<!-- 수정SQL -->
+	<update id="update" parameterType="QA">
+		update QA set QTITLE=#{qtitle},QCONTENT=#{qcontent},QPWD=#{qpwd} WHERE QSEQ=#{qseq}
+	</update>
+	<!-- 조회수 -->
+	<update id="views" parameterType="QA">
+		update QA set qcount=(select qcount+1 from qa where qseq=#{qseq}) where qseq=#{qseq}
+	</update>
+	<!-- 삭제 -->
+	<delete id="delete" parameterType="long">
+			delete qa where qseq = #{qseq}
+	</delete>
+</mapper>
+
