@@ -11,9 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
-import team1.togather.fileset.GBPath;
 import team1.togather.domain.GBoardCriteria;
 import team1.togather.domain.GBoard;
+import team1.togather.fileset.Path;
 import team1.togather.mapper.GBoardMapper;
 
 @Log4j
@@ -80,13 +80,13 @@ public class GBoardServiceImpl implements GBoardService {
 	}
 	
 	private boolean gbwriteFile(MultipartFile gbfile, String gbsaveFileName) {
-		File gbdir = new File(GBPath.GBFILE_STORE);
+		File gbdir = new File(Path.GBFILE_STORE);
 		if(!gbdir.exists()) gbdir.mkdirs();
 		
 		FileOutputStream fos = null;
 		try {
 			byte data[] = gbfile.getBytes();
-			fos = new FileOutputStream(GBPath.GBFILE_STORE + gbsaveFileName);
+			fos = new FileOutputStream(Path.GBFILE_STORE + gbsaveFileName);
 			fos.write(data);
 			fos.flush();
 			

@@ -1,28 +1,21 @@
 package team1.togather.controller;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -34,9 +27,9 @@ import team1.togather.domain.GBoard;
 import team1.togather.domain.GBPageMaker;
 import team1.togather.domain.GBoardCriteria;
 import team1.togather.domain.Member;
+import team1.togather.fileset.Path;
 import team1.togather.service.GBReplyService;
 import team1.togather.service.GBoardService;
-import team1.togather.fileset.GBPath;
 
 @Log4j
 @AllArgsConstructor
@@ -183,7 +176,7 @@ public class GBoardController {
 	}
 	@GetMapping("gbdel.do")
 	public String gbdelete(long gbnum, @RequestParam String gbfname, HttpServletRequest request) {
-		File gbfile = new File(GBPath.GBFILE_STORE, gbfname);
+		File gbfile = new File(Path.GBFILE_STORE, gbfname);
 		if(gbfile.exists()) gbfile.delete();
 		gboardService.gbremove(gbnum);
 		long gseq = Long.parseLong(request.getParameter("gseq"));
@@ -199,7 +192,7 @@ public class GBoardController {
 	
 	@GetMapping("gbfdownload.do")
 	public ModelAndView gbfdownload(String gbfname, HttpServletRequest request, HttpServletResponse response) {
-		File gbfile = new File(GBPath.GBFILE_STORE, gbfname);
+		File gbfile = new File(Path.GBFILE_STORE, gbfname);
 		long gbnum = Long.parseLong(request.getParameter("gbnum"));
 		if(gbfile.exists()) {
 			return new ModelAndView("gbfileDownloadView", "downloadFile", gbfile);
