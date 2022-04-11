@@ -16,11 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.AllArgsConstructor;
+import team1.togather.domain.*;
 import team1.togather.service.NotificationService;
-import team1.togather.domain.NotificationCriteria;
-import team1.togather.domain.Member;
-import team1.togather.domain.Notification;
-import team1.togather.domain.nPageMaker;
 
 @AllArgsConstructor
 @Controller
@@ -33,6 +30,7 @@ public class NotificationController {
 	@ResponseBody
 	@GetMapping("listRest")
 	public List<Notification> listRest(String option, String notificationSearch, Integer page, Integer pageSize){
+		System.out.println("listRest안 option: "+option+" notificationSearch: "+notificationSearch+" page: "+page+" pagesize: "+pageSize);
 		
 		Map<String, String> map = new HashMap<String, String>();
 		NotificationCriteria cri = new NotificationCriteria(page, pageSize);
@@ -41,6 +39,7 @@ public class NotificationController {
 		map.put("startRow", String.valueOf(cri.getStartRow()));
 		map.put("endRow", String.valueOf(cri.getEndRow()));
 
+		System.out.println(" map:" +map);
 		return service.getNotificationBySearch(map);
 	}
 	
@@ -51,9 +50,7 @@ public class NotificationController {
 	
 	@GetMapping("notice")
 	public String notificationList(NotificationCriteria cri, Model model, HttpServletRequest request) {
-
 		model.addAttribute("notificationList", service.listPageCri(cri)); // =listPageCri()
-		
 		if(request.getParameter("page")!=null) {
 			String pageAt = request.getParameter("page");
 			cri.setPage(Integer.parseInt(pageAt));
@@ -74,20 +71,22 @@ public class NotificationController {
 	
 	@PostMapping("notificationWithSearch")
 	public String notificationListWithSearch(NotificationCriteria cri, Model model, HttpServletRequest request) {
-
+		System.out.println("notification컨트롤러안 listpageGET: cri값: " +cri);
 		model.addAttribute("notification", service.listPageCri(cri)); // =listPageCri()
 		if(request.getParameter("page")!=null) {
 			String pageAt = request.getParameter("page");
-
+			System.out.println("현재 페이지: "+pageAt);
 			cri.setPage(Integer.parseInt(pageAt));
 		}
 		if(request.getParameter("pageSize")!=null) {
 			String pageSize = request.getParameter("pageSize");
-
+			System.out.println("현재 페이지사이즈: "+pageSize);
 			cri.setPageSize(Integer.parseInt(pageSize));
 		}
 		if(request.getParameter("notificationSearch")!=null) {
 			String notification = request.getParameter("notification");
+			System.out.println("현재 notificationSearch: "+notification);
+
 		}
 		nPageMaker pm = new nPageMaker();
 		pm.setCri(cri);
@@ -103,6 +102,7 @@ public class NotificationController {
 	public ModelAndView content(long nseq) {
 		service.updateNView(nseq);
 		Notification notification = service.getNotificationContent(nseq);
+		System.out.println("notification " + notification.getNseq() );
 		ModelAndView mv = new ModelAndView("notification/noticeContent","noticeContent",notification);		
 		return mv ;
 		//return "notification/noticeContent";
@@ -122,6 +122,7 @@ public class NotificationController {
 	@PostMapping("noticeInsert")
 	public String noticeInsert(Notification notification) {
 		service.insert(notification);
+		System.out.println("값 ");
 		return "redirect:notice";
 	}
 	//업데이트폼
@@ -131,21 +132,22 @@ public class NotificationController {
 		Notification notification = service.getNotificationContent(nseq);
 		ModelAndView mv = new ModelAndView("notification/noticeUpdate" ,"notification",notification);
 		mv.addObject(member);
-
 		return mv;
 	}
 	// 업데이트 수정하기 누르면
 	@PostMapping("noticeUpdate")
 	public String noticeUpdate(Notification notification) {
 		service.update(notification);
+		System.out.println("notification : "+ notification);
 		return "redirect:notice";
 	}
 	@GetMapping("noticeDelete")
 	public String noticeDelete(Long nseq) {
 		service.delete(nseq);
+		System.out.println();
 		return "redirect:notice";
 	}
-	
+
 	
 
 

@@ -11,13 +11,13 @@ import team1.togather.domain.NotificationCriteria;
 
 public interface NotificationMapper {
 
-	List<Notification> list();	
+	List<Notification> list();
 	ArrayList<Notification> list(int pageAt, int ps);		//페이지
 	ArrayList<Notification> list(String option, String ocontent);// 옵션이랑
-	
+
 	ArrayList<String> getCategory();
-	
-		
+
+
 	//조회수
 	public void updateNView(Long nseq);
 
@@ -26,13 +26,13 @@ public interface NotificationMapper {
 	public List<Notification> listPageCri(NotificationCriteria cri); // 페이징처리(cri객체사용)	
 	public List<Notification> getNotificationBySearch(Map map);
 	Notification getNotificationContent(Long nseq);	// nseq으로 내용가저옴
-	
+
 	public Integer pageCount(); 		//페이지 카운트 계산
-	
+
 	//운영자 인서트 업데이트 삭제
 	void insert(Notification notification);
 	void update(Notification notification);
 	void delete(long nseq);
-	
-	
+
+
 }

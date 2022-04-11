@@ -51,45 +51,59 @@
     <!-- ======= Header ======= -->
     <header id="header" class="fixed-top">
       <div class="container d-flex align-items-center">
-        <h1 class="logo me-auto"><a href="index.html">Mentor</a></h1>
+        <h1 class="logo me-auto"><a href="index.html">Togather</a></h1>
         <!-- Uncomment below if you prefer to use an image logo -->
-        <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+        <!-- <a href="index.html" class="logo me-auto"><img src="/assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
         <nav id="navbar" class="navbar order-last order-lg-0">
           <ul>
-            <li><a class="active" href="index.html">Home</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="myGroup.html">나의 모임</a></li>
-            <!--로그인시에만 보이게 하기-->
-            <li><a href="boardMain.html">게시판</a></li>
-            <li>
-              <a href="wishlist.html"
-                >찜목록
-                <span class="badge bg-dark text-white ms-1 rounded-pill"
-                  >0</span
-                >
-              </a>
-            </li>
-
+            <li><a href="../">Home</a></li>
+            <li><a href="../about">About</a></li>
+            <li><a href="../board/listPage">게시판</a></li>
+            <c:if test="${m ne null}">
+              <li><a href="../groupTab/myGroup.do?mnum=${m.mnum }">나의 모임</a></li><!--로그인시에만 보이게 하기-->
+              <li><a href="../wishTab/wishList?mnum=${m.mnum }">찜목록
+                <span id="numberOfWish" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+              </a></li>
+            </c:if>
             <li class="dropdown">
               <a href="#"
-                ><span>고객지원</span> <i class="bi bi-chevron-down"></i
+              ><span>고객지원</span> <i class="bi bi-chevron-down"></i
               ></a>
               <ul>
-                <li><a href="notice.html">공지사항</a></li>
-                <li><a href="FAQ.html">자주묻는 질문</a></li>
-                <li><a href="QA.html">Q&A</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="../notification/notice">공지사항</a></li>
+                <li><a href="../faq/listPage">자주묻는 질문</a></li>
+                <li><a href="../qa">Q&A</a></li>
+                <li><a href="../contact">Contact</a></li>
               </ul>
             </li>
-            <li><a href="login.html">로그인</a></li>
+
+            <c:choose>
+              <c:when test="${m eq null}">
+                <li><a href="../member/login.do">로그인 ${sessionScope.m} </a></li>
+              </c:when>
+              <c:otherwise>
+                <li><a href="javascript:void(0);" onclick="signout();">로그아웃</a></li>
+                <li><a href="../mypage/main">마이페이지</a></li>
+              </c:otherwise>
+            </c:choose>
           </ul>
           <i class="bi bi-list mobile-nav-toggle"></i>
+
         </nav>
         <!-- .navbar -->
+
         <!--로그인전에는 회원가입만 보이고 로그인하면 모임만들기만 보이게 하는건 어떤지??-->
-        <a href="join.html" class="get-started-btn">회원가입</a>
-        <a href="groupCreate.html" class="get-started-btn">모임만들기</a>
+        <c:choose>
+          <c:when test="${m eq null}">
+            <a href="../member/joinform.do" class="get-started-btn">회원가입</a>
+          </c:when>
+          <c:otherwise>
+            <a href="../group/groupCreate.do" class="get-started-btn">모임만들기</a>
+          </c:otherwise>
+        </c:choose>
+
+
       </div>
     </header>
     <!-- End Header -->
@@ -105,7 +119,7 @@
 
       <!-- ======= Pricing Section ======= -->
       <section
-        class="vh-100"
+        class="h-100"
         style="background-color: #eee; box-sizing: content-box"
       >
         <div class="container h-100" data-aos="flip-down">

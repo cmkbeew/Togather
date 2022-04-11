@@ -26,11 +26,11 @@ import team1.togather.mapper.MemberMapper;
 @Service
 @AllArgsConstructor
 public class MemberServiceImpl implements MemberService {
-	
+
 	private MemberMapper mapper;
 	@Override
 	public int join(Member member) {
-		
+
 		int join = 0;
 		int joincheck_phone = joincheck(member.getPhone());
 		int joincheck_email = joincheck2(member.getEmail());
@@ -58,9 +58,9 @@ public class MemberServiceImpl implements MemberService {
 			System.out.println("카테고리 : " +member.getCategory());
 			System.out.println("이건뭐임 : " +member.getAthur());*/
 			System.out.println("주소 : " +member.getMaddr());
-			join = YES_JOIN;		
+			join = YES_JOIN;
 		}else if(joincheck_phone==already){
-			join =already_phone;	
+			join =already_phone;
 			//System.out.println("폰같을때");
 		}else if(joincheck_email==already) {
 			join=already_email;
@@ -109,37 +109,37 @@ public class MemberServiceImpl implements MemberService {
 	}
 	@Override
 	public long memberCount() {
-		
+
 		return mapper.memberCount();
 	}
 	@Override
 	public Member memberInfo(MemInGroup meminGroup) {
-		
+
 		return mapper.memberInfo(meminGroup);
 	}
 	@Override
 	public void blocking(Block block) {
 		mapper.blocking(block);
-		
+
 	}
 	@Override
 	public List<String> blockedNameList(HttpSession session) {
 		Member m = (Member) session.getAttribute("m");
-		long sessionMnum = m.getMnum(); 
+		long sessionMnum = m.getMnum();
 		List<String> blockedNameList = mapper.blockedNameList(sessionMnum);//여러명
 		return blockedNameList;
 	}
 	@Override
 	public void blockingCancel(Block block) {
 		mapper.blockingCancel(block);
-		
+
 	}
-	
+
 	//////////////////////////////////////메세지
 	@Override
 	public void sendMessage(Message message) {
 		mapper.sendMessage(message);
-		
+
 	}
 	@Override
 	public Long messageViewCheck(long mnum) {
@@ -148,11 +148,11 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public void viewChecked(long mnum) {
 		mapper.viewChecked(mnum);
-		
+
 	}
 	@Override
 	public List<Message> messageList(Map<String,Object> map) {
-		
+
 		return mapper.messageList(map);
 	}
 	@Override
@@ -162,14 +162,14 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public void replyToMessage(Message message) {
 		mapper.replyToMessage(message);
-		
+
 	}
 	@Override
 	public void messageChecked(long meseq) {
 		mapper.messageChecked(meseq);
-		
+
 	}
-//////////////////////////////////////회원가입 카테고리
+	//////////////////////////////////////회원가입 카테고리
 	@Override
 	public List<Category> firstCategory() {
 		return mapper.firstCategory();
@@ -189,7 +189,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public void messageDelete(long meseq) {
 		mapper.messageDelete(meseq);
-		
+
 	}
 	@Override
 	public Long nextPostMessage(Message message) {
@@ -199,6 +199,9 @@ public class MemberServiceImpl implements MemberService {
 	public Long previousMessage(Message message) {
 		return mapper.previousMessage(message);
 	}
-	
-	
+	@Override
+	public String getMnameByMnum(Long mnum) {
+		return mapper.getMnameByMnum(mnum);
+	}
+
 }

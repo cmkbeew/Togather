@@ -84,7 +84,7 @@ public class Board {
 	}
 	public void setRdate(Date rdate) {
 		this.rdate = rdate;
-	} 
-	
-	
+	}
+
+
 }

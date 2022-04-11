@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -22,7 +23,7 @@ public class WishlistController {
 	private GroupTabService groupservice;
 	@Autowired
 	private WishListService wishservice;
-	
+
 	@GetMapping("/wishList")
 	public ModelAndView wishList(Long mnum) {
 		System.out.println("mnum: "+ mnum);
@@ -47,4 +48,5 @@ public class WishlistController {
 		mv.addObject("namelist", namelist);
 		return mv;
 	}
+
 }

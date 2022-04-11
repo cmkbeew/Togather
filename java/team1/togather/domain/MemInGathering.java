@@ -11,4 +11,5 @@ public class MemInGathering {
 	private long ga_seq;
 	private long mnum;
 	private long grade;
+	private long notice;
 }

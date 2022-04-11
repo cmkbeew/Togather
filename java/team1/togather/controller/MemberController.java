@@ -45,7 +45,7 @@ public class MemberController {
 		ModelAndView mv = new ModelAndView("member/join","firstCategory",firstCategory);
 		return mv;
 	}
-	
+
 	@GetMapping("/category")
 	@ResponseBody
 	public List<Category> category(Category category,long sequence) {
@@ -55,11 +55,11 @@ public class MemberController {
 		}else if(sequence==3) {
 			categorys = service.thirdCategory(category);
 		}
-		
+
 		return categorys;
 	}
-	
-	
+
+
 	@RequestMapping("/join")
 	@ResponseBody
 	public int join(Member member,HttpSession session,String category_first,String category_second,String category_third) {
@@ -70,7 +70,7 @@ public class MemberController {
 		}
 		return join;
 	}
-	
+
 	@GetMapping("/login.do")
 	public String login() {
 		return "member/login";
@@ -98,9 +98,9 @@ public class MemberController {
 		mv.addObject("grade", grade);
 		return mv;
 	}
-	
-	
-	
+
+
+
 	@PostMapping("/blocking")
 	@ResponseBody
 	public int blocking(Block block) {
@@ -146,7 +146,7 @@ public class MemberController {
 		mv.addObject("gseq", gseq);
 		return mv;
 	}
-	
+
 	@PostMapping("/sendMessage")
 	public String sendMessage(Message message,long gseq) {
 		service.sendMessage(message);
@@ -154,7 +154,7 @@ public class MemberController {
 		memberInfoBack+="redirect:memberInfo?mnum="+message.getFrom_mnum()+"&gseq="+gseq;
 		return memberInfoBack;
 	}
-	
+
 	@GetMapping("/messageList")
 	public ModelAndView messageList(HttpSession session,IndexCriteria cri,HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView();
@@ -174,14 +174,14 @@ public class MemberController {
 		IndexPage pm = new IndexPage();
 		pm.setCri(cri);
 		pm.setTotalCount(service.messageCount(m.getMnum())); //calcDate()실행
-		
+
 		mv.addObject("pm", pm);
 		mv.addObject("cri", cri);
 		List<Message> messageList = service.messageList(map);
 		mv.addObject("messageList", messageList);
 		return mv;
 	}
-	
+
 	@GetMapping("/messageContent")
 	public ModelAndView messageContent(long meseq,IndexCriteria cri,HttpServletRequest request) {
 		Message messageContent = service.messageContent(meseq);
@@ -197,48 +197,47 @@ public class MemberController {
 		}
 		return mv;
 	}
-	
+
 	@PostMapping("/replyToMessage")
 	public String replyToMessage(Message message,IndexCriteria cri,HttpServletRequest request) {
 		service.replyToMessage(message);
 		String pageAt="";
 		String pageSize="";
 		if(request.getParameter("page")!=null) {
-			 pageAt = request.getParameter("page");	
+			pageAt = request.getParameter("page");
 		}
 		if(request.getParameter("pageSize")!=null) {
 			pageSize = request.getParameter("pageSize");
 		}
 		return "redirect:messageContent?mnum="+message.getTo_mnum()+"&page="+pageAt+"&pageSize="+pageSize+"&meseq="+message.getMeseq();
 	}
-	
+
 	@GetMapping("/messageDelete")
 	public String messageDelete(long meseq,long mnum,IndexCriteria cri,HttpServletRequest request) {
 		service.messageDelete(meseq);
 		String pageAt="";
 		String pageSize="";
 		if(request.getParameter("page")!=null) {
-			 pageAt = request.getParameter("page");	
+			pageAt = request.getParameter("page");
 		}
 		if(request.getParameter("pageSize")!=null) {
 			pageSize = request.getParameter("pageSize");
 		}
 		return "redirect:messageList?mnum="+mnum+"&page="+pageAt+"&pageSize="+pageSize;
 	}
-	
+
 	@PostMapping("/nextMessageCheck")
 	@ResponseBody
 	public Long nextMessageCheck(Message message) {
 		Long nextMeseq = service.nextPostMessage(message);
 		return nextMeseq;
-		
+
 	}
-	
+
 	@PostMapping("/previousMessage")
 	@ResponseBody
 	public Long previousMessage(Message message) {
 		Long nextMeseq = service.previousMessage(message);
 		return nextMeseq;
-		
 	}
 }

@@ -230,7 +230,7 @@
     		var mnum= mnumCheck;
     		var qamnum=${qanda.mnum};
     		var athur = athur;
-    		if(mnum==qamnum){
+    		if(athur == 0 ||mnum==qamnum){
     			$('#comment').remove();
     			if(i==1){
     	    		$(function(){
@@ -245,41 +245,7 @@
     					$('#divtest2').append(
     						"<div class='leave-comment-form' id='comment'> "
     						+"<h3 class='aside-title'>Leave a reply</h3>"
-    						+ "<form action='qaReply?&mnum=${m.mnum}&qseq=${qanda.qseq}&mname=${m.mname}&page=${page}&pageSize=${pageSize}' method='post'>"
-    						+ "<div class='input-grids'>"
-    						+ "<div class='form-group'>"
-    						+ "<input type='text' name='mname' class='form-control'  value='${m.mname}' required disabled>"
-    						+ "</div>"
-    						+ "<div class='form-group'>"
-    						+"<textarea name='qarcontent' class='form-control' placeholder='Your Comment' required></textarea>"
-    						+"</div>"
-    						+"</div>"
-    						+"<div class='text-right mt-4'>"
-    						+"<button class='btn button-style'>Post Comment</button>"
-    						+"</div>"
-    						+"</form>"
-    						+"</div>"
-    					);
-    					});
-    	    		}else{
-    	    			$('#comment').remove();
-    	    		}
-    		}else if(athur == 0 ){
-    			$('#comment').remove();
-    			if(i==1){
-    	    		$(function(){
-    	    			$('#'+liDown).remove();
-    	    			var li="";
-    	    			li+="<li id='"+liDown+"'>";
-    	    			li+="<a href='javascript:void(0)' onclick=\"location.href='javascript:comment2(0,"+num+","+mnum+","+athur+")'\"><i class='fa fa-reply mr-1' aria-hidden='true'></i>Reply</a>";
-    	    			li+="</li>";
-    	    			$('#'+liUp).after(                     
-    	                    li              		
-    	    			);
-    					$('#divtest2').append(
-    						"<div class='leave-comment-form' id='comment'> "
-    						+"<h3 class='aside-title'>Leave a reply</h3>"
-    						+ "<form action='/admin/qaReply?&mnum=${m.mnum}&qseq=${qanda.qseq}&mname=${m.mname}&page=${page}&pageSize=${pageSize}' method='post'>"
+    						+ "<form action='qaReply?&mnum=${m.mnum}&qseq=${qanda.qseq}&mname=${m.mname}' method='post'>"
     						+ "<div class='input-grids'>"
     						+ "<div class='form-group'>"
     						+ "<input type='text' name='mname' class='form-control'  value='${m.mname}' required disabled>"
@@ -436,9 +402,7 @@
                         <h3 class="aside-title ">Recent comments(${qreplyCount })</h3>
                         <div class="comments-grids">
                             <!-- 여기부터 루프 -->
-<c:if test="${empty qaReply}">
-	답변이 아직 없습니다.
-</c:if>
+
 <c:if test="${qaReply ne null }">
 <c:forEach var="qaReply" items="${qaReply }" varStatus="index">
                             <div class="media-grid">
@@ -462,9 +426,10 @@
 					</div>
                 </div>
                     <c:if test="${m.athur eq 0}">
+                    
 	                    <div class="leave-comment-form" id="comment">
 	                        <h3 class="aside-title">Leave a reply</h3>
-	                        <form action="/admin/qaReply?&mnum=${m.mnum}&qseq=${qanda.qseq}&mname=${m.mname}&page=${page}&pageSize=${pageSize}" method="post">
+	                        <form action="/admin/qaReply?&mnum=${m.mnum}&qseq=${qanda.qseq}&mname=${m.mname}" method="post">
 	                            <div class="input-grids">
 	                                <div class="form-group">
 	                                    <input type="text" name="Name" class="form-control"  value="${m.mname}" required disabled>

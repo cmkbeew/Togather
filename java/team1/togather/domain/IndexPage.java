@@ -7,14 +7,16 @@ public class IndexPage {
 	private int endPage;
 	private boolean prev;
 	private boolean next;
-	
+
+	//Criteria안에 page, pageSize 있음
 	private IndexCriteria cri;
-	
+
+	//화면에 보여지는 페이지블럭의 수
 	private int displayPageNum = 6;
 
 	public IndexPage() {}
 	public IndexPage(int totalCount, int startPage, int endPage, boolean prev, boolean next, IndexCriteria cri,
-			int displayPageNum) {
+					 int displayPageNum) {
 		super();
 		this.totalCount = totalCount;
 		this.startPage = startPage;
@@ -28,10 +30,13 @@ public class IndexPage {
 	public int getTotalCount() {
 		return totalCount;
 	}
+
 	public void setTotalCount(int totalCount) { //변경
 		this.totalCount = totalCount;
+		//총 글의 개수를 가지고 왔을때 필요한 정보를 계산
 		calcDate();
-	}	
+	}
+
 	private void calcDate() {
 		endPage = (int) (Math.ceil(cri.getPage()/(double)displayPageNum) * displayPageNum);
 		startPage = (endPage - displayPageNum) +1;
@@ -40,42 +45,55 @@ public class IndexPage {
 		prev = (cri.getPage() == 1? false:true);
 		next = (endPage == cri.getPage()? false:true);
 	}
+
 	public int getStartPage() {
 		return startPage;
 	}
+
 	public void setStartPage(int startPage) {
 		this.startPage = startPage;
 	}
+
 	public int getEndPage() {
 		return endPage;
 	}
+
 	public void setEndPage(int endPage) {
 		this.endPage = endPage;
 	}
+
 	public boolean isPrev() {
 		return prev;
 	}
+
 	public void setPrev(boolean prev) {
 		this.prev = prev;
 	}
+
 	public boolean isNext() {
 		return next;
 	}
+
 	public void setNext(boolean next) {
 		this.next = next;
 	}
+
 	public IndexCriteria getCri() {
 		return cri;
 	}
+
 	public void setCri(IndexCriteria cri) { //변경
 		this.cri = cri;
 	}
+
 	public int getDisplayPageNum() {
 		return displayPageNum;
 	}
+
 	public void setDisplayPageNum(int displayPageNum) {
 		this.displayPageNum = displayPageNum;
 	}
+
 	@Override
 	public String toString() {
 		return "PageMaker [totalCount=" + totalCount + ", startPage=" + startPage + ", endPage=" + endPage + ", prev="

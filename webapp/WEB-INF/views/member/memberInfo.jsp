@@ -55,109 +55,25 @@
     <script type="text/javascript" language="javascript" 
 		     src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
   	<script type="text/javascript">
-  	function gradeChange(num){ 
-  		var checkNum= num;
-  		if(checkNum==1){
-	  		Swal.fire({
-				  title: '운영진으로 바꾸시나요?',
-				  icon: 'question',
-				  showCancelButton: true,
-				  confirmButtonColor: '#3085d6',
-				  cancelButtonColor: '#d33',
-				  confirmButtonText: 'Yes'
-				}).then((result) => {
-					if (result.isConfirmed) {
-						var mnum= ${memberInfo.mnum};
-						var gseq = ${gseq};
-						var result = {"mnum":mnum,"gseq":gseq,"num":checkNum};
-						$.ajax({
-							url: "../groupTab/gradeChange.json",
-							type: "POST",
-							data: result,
-							success: function(data){
-								console.log(data);
-								Swal.fire({
-									title:"권한 변경 완료",
-									icon:"success"
-									}).then((result) => {
-										if(result){
-											opener.location.reload();
-											window.close();
-										}
-								});									
-							}
-						});
-					}
-				});
-  		}else{
-  			Swal.fire({
-				  title: '회원으로 바꾸시나요?',
-				  icon: 'question',
-				  showCancelButton: true,
-				  confirmButtonColor: '#3085d6',
-				  cancelButtonColor: '#d33',
-				  confirmButtonText: 'Yes'
-				}).then((result) => {
-					if (result.isConfirmed) {
-						var mnum= ${memberInfo.mnum};
-						var gseq = ${gseq};
-						var result = {"mnum":mnum,"gseq":gseq,"num":checkNum};
-						$.ajax({
-							url: "../groupTab/gradeChange.json",
-							type: "POST",
-							data: result,
-							success: function(data){
-								console.log(data);
-								Swal.fire({
-									title:"권한 변경 완료",
-									icon:"success"
-									}).then((result) => {
-										if(result){
-											opener.location.reload();
-											window.close();
-										}
-								});									
-							}
-						});
-					}
-				});
-  		}
-  	}
-	function kickout(){
-		Swal.fire({
-			  title: '강퇴 하시겠습니까?',
-			  icon: 'question',
-			  showCancelButton: true,
-			  confirmButtonColor: '#3085d6',
-			  cancelButtonColor: '#d33',
-			  confirmButtonText: 'Yes'
-			}).then((result) => {
-				if (result.isConfirmed) {
-					var mnum = ${memberInfo.mnum};
-					var gseq = ${gseq};
-					var result = {"mnum":mnum,"gseq":gseq};
-					$.ajax({
-						url: "../groupTab/kickout.json",
-						type: "POST",
-						data: result,
-						success: function(data){
-							console.log(data);
-							Swal.fire({
-								title:"강퇴완료",
-								icon:"success"
-								}).then((result) => {
-									if(result){
-										opener.location.reload();
-										window.close();
-									}
-							});									
+	  /*function blocking(){
+		    var blocking = ${m.mnum};
+		    var blocked = ${memberInfo.mnum};
+		    var result = {"blocking":blocking,"blocked":blocked};
+	    	$(function(){
+				$.ajax({
+					url: "../member/blocking.json",
+					type: "POST",
+					data: result,
+					success: function(data){
+						console.log(data);
+						if(data==1){
+							alert("차단완료");
+							location.reload();
 						}
-					});
-				}
+					}
+				});
 			});
-			
-			
-	}
+	  }*/
 	  
 	  function blocking(){
   		Swal.fire({
@@ -299,30 +215,17 @@
 		                <div class="form-group mt-3">
 		                  <h4>${memberInfo.maddr }</h4>
 		                </div>
-				
-              		
-              	
+		           
+                
+                <div class="my-3">
+                  <div class="loading">Loading</div>
+                  <div class="error-message"></div>
+                  <div class="sent-message">
+                    Your message has been sent. Thank you!
+                  </div>
+                </div>
                 <div class="text-center">
-                <c:if test="${grade ==0 || grade==1}">
-                	<div id="div1" class="btn-group">
-									<button id="button1"
-									  type="button"
-									  class="btn btn-outline-light dropdown-toggle"
-									  data-bs-toggle="dropdown"
-									  aria-expanded="false"
-									  style="color: black; border-color: black;background-color:#fff">
-									<span id='span1'>권한</span>
-									</button>
-										<ul id="ul1" class="dropdown-menu">	
-											<li><a  class='dropdown-item' onclick="javascript:gradeChange(1)" data-value='운영진'>운영진</a></li>
-											<li><a  class='dropdown-item' onclick="javascript:gradeChange(2)" data-value='회원'>회원</a></li>
-										</ul>
-								  </div>
-							</c:if>
-                	<c:if test="${grade ==0 || grade==1}">
-                		<a type="button" onclick="location.href='javascript:kickout()'" class="get-started-btn">강퇴하기</a>
-                	</c:if>
-                    <a type="button" onclick="location.href='sendMessageForm?to_mnum=${m.mnum}&to_mname=${m.mname}&from_mnum=${memberInfo.mnum}&from_mname=${memberInfo.mname}&gseq=${gseq}'" class="get-started-btn">Send Message</a>
+                  <a type="button" onclick="location.href='sendMessageForm?to_mnum=${m.mnum}&to_mname=${m.mname}&from_mnum=${memberInfo.mnum}&from_mname=${memberInfo.mname}&gseq=${gseq}'" class="get-started-btn">Send Message</a>
                 </div>
               </form>
               

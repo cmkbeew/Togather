@@ -32,6 +32,7 @@ public class nPageMaker {
 
 	public void setTotalCount(int totalCount) { //변경
 		this.totalCount = totalCount;
+		System.out.println("DB에서 총 글의 개수를 계산");
 		//총 글의 개수를 가지고 왔을때 필요한 정보를 계산
 		calcDate();
 	}

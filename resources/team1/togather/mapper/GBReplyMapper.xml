@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team1.togather.mapper.GBReplyMapper">
+	<select id="gbrlist" resultType="GBReply" parameterType="long">
+		 select * from GBREPLY where GBNUM=#{gbnum} order by gbrseq desc
+	</select>
+	<insert id="gbrinsert" parameterType="GBReply">
+	    insert into GBREPLY values(GBRSEQ_SEQ.nextval, #{gbnum}, #{mname}, #{mnum}, #{gbrcontent}, #{gbr_like}, SYSDATE)
+	</insert>
+	<update id="gbrupdate" parameterType="GBReply">
+        update GBREPLY set GBRCONTENT=#{gbrcontent}, RDATE=SYSDATE where GBRSEQ=#{gbrseq}
+	</update>
+	<select id="selectgbrseq" resultType="GBReply" parameterType="long">
+	     select * from GBREPLY where GBRSEQ=#{GBRSEQ} 
+	</select>
+	<delete id="gbrdelete" parameterType="long">
+	    delete from GBREPLY where GBRSEQ=#{GBRSEQ}
+	</delete>
+	
+
+</mapper>

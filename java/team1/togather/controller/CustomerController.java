@@ -44,6 +44,11 @@ public class CustomerController {
 		model.addAttribute("pm", pm);
 		model.addAttribute("cri", cri);
 		return "customer/Q&A";
+		//List<QandA> list = service.QAlist();
+		//ModelAndView mv = new ModelAndView("customer/Q&A", "list", list);
+		//mv.addObject("nameList", service.qaNameList());
+		//System.out.println(list);
+		//return mv;
 	}
 	@GetMapping("/qaContent")
 	public ModelAndView qacontent(QandA qanda,HttpServletRequest request) {
@@ -103,6 +108,7 @@ public class CustomerController {
 	public Long qaNextPostCheck(long qseq,Member member) {
 		System.out.println("권한: "+member.getAthur());
 		Long nextQseq = (long) 0;
+		System.out.println("qseq: " +qseq);
 		if(member.getAthur()==0) {
 			nextQseq=service.nextPost(qseq);
 		}else {
@@ -115,14 +121,22 @@ public class CustomerController {
 	@PostMapping("/qaPreviousPostCheck")
 	@ResponseBody
 	public Long previousPost(long qseq,Member member) {
+		System.out.println("previousPost시작");
+		System.out.println("qanda: " +qseq);
+		System.out.println("권한: "+member.getAthur());
 		Long previousQseq = (long) 0;
 		
 		if(member.getAthur()==0) {
-
+			System.out.println("if안");
 			previousQseq=service.previousPost(qseq);
+			System.out.println("if 안 previousQseq :"+previousQseq);
 		}else {
+			System.out.println("else안");
 			previousQseq=service.previousPostUser(qseq);
+			System.out.println("else 안 previousQseq :"+previousQseq);
+			System.out.println("else 안 previousQseq :"+qseq);
 		}
+		System.out.println("previousQseq :"+previousQseq);
 		return previousQseq;
 		
 	}
@@ -144,25 +158,18 @@ public class CustomerController {
 	@RequestMapping("/qaDelete")
 	public String qaDelete(QandA qanda) {
 		service.delete(qanda);
-	
 		return "redirect:qa";
 	}
 	
 	@RequestMapping("/admin/qaReply")
-	public String adminQaReply(QaReply qaReply,HttpServletRequest request) {
-		System.out.println("관리자로 넘어옴");
-		String pageAt = request.getParameter("page");
-		String pageSize = request.getParameter("pageSize");
+	public String adminQaReply(QaReply qaReply) {
 		service.qaReply(qaReply);
-		return "redirect:../qaContent?qseq="+qaReply.getQseq()+"&page="+pageAt+"&pageSize="+pageSize;
+		return "redirect:../qaContent?qseq="+qaReply.getQseq();
 	}
 	
 	@RequestMapping("/qaReply")
-	public String UserQaReply(QaReply qaReply,HttpServletRequest request) {
-		System.out.println("일반 유저");
-		String pageAt = request.getParameter("page");
-		String pageSize = request.getParameter("pageSize");
+	public String UserQaReply(QaReply qaReply) {
 		service.qaReply(qaReply);
-		return "redirect:qaContent?qseq="+qaReply.getQseq()+"&page="+pageAt+"&pageSize="+pageSize;
+		return "redirect:qaContent?qseq="+qaReply.getQseq();
 	}
 }

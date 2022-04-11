@@ -2,6 +2,7 @@ package team1.togather.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @Data
@@ -44,10 +45,14 @@ public class IndexCriteria {
 		this.pageSize = pageSize;			
 	}
 	
+	//페이징처리 시작하는 값생성
+	//멤버변수가 아니지만 getter와 setter를 생성하면 Mapper에서 접근가능하다.
+	//Mapper에서 사용하는 법 #{pageStart}
 	public int getPageStart() {
 		return (this.page - 1)*this.pageSize;
 	}
 	
+	//toString()
 	@Override
 	public String toString() {
 		return "Criteria [page=" + page + ", pageSize=" + pageSize + "]";

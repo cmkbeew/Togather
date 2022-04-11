@@ -35,5 +35,7 @@ public interface MemberMapper {
 	List<Category> firstCategory();//첫번째 카테고리
 	List<Category> secondCategory(Category category);//두번쨰카테고리
 	List<Category> thirdCategory(Category category);//세번쨰카테고리
+
+	String getMnameByMnum(Long mnum);
 }
 

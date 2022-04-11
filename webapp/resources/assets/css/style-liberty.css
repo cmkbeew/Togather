@@ -3331,14 +3331,14 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-light {
-  color: #f8f9fa;
-  border-color: #f8f9fa;
+  color: #212529;
+  border-color: #212529;
 }
 
 .btn-outline-light:hover {
-  color: #212529;
+  color: #f8f9fa;
   background-color: #f8f9fa;
-  border-color: #f8f9fa;
+  border-color: #212529;
 }
 
 .btn-outline-light:focus,

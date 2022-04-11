@@ -217,6 +217,7 @@
   <body>
     <!-- ======= Header ======= -->
     <header id="header" class="fixed-top">
+    <input type="hidden" id="acodeId" value=""/>
       <div class="container d-flex align-items-center">
         <h1 class="logo me-auto"><a href="../">Togather</a></h1>
         <!-- Uncomment below if you prefer to use an image logo -->
@@ -226,11 +227,11 @@
           <ul>
             <li><a class="active" href="../">Home</a></li>
             <li><a href="about.html">About</a></li>
-            <li><a href="../myGroup.do?mnum=${m.mnum }">나의 모임</a></li>
+            <li><a href="myGroup.do?mnum=${m.mnum }">나의 모임</a></li>
             <!--로그인시에만 보이게 하기-->
-            <li><a href="../board/listPage">게시판</a></li>
+            <li><a href="boardMain.html">게시판</a></li>
             <li>
-              <a href="../wishTab/wishList?mnum=${m.mnum }"
+              <a href="wishlist.html"
                 >찜목록
                 <span class="badge bg-dark text-white ms-1 rounded-pill"
                   >0</span
@@ -298,16 +299,16 @@
           <script type="text/javascript">
 				var inputData = ['${gatheringInfo.ga_place}']
 				var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-				mapOption = {
-					center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-					level: 3 // 지도의 확대 레벨
-				};
+					mapOption = {
+						center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+						level: 3 // 지도의 확대 레벨
+					};
 				// 지도를 표시할 div와 지도 옵션으로 지도를 생성합니다
 				var map = new kakao.maps.Map(mapContainer, mapOption);
 				var count = 0;
 				var ps = new kakao.maps.services.Places();
 				var bounds = new kakao.maps.LatLngBounds();
-				var geocoder = new kakao.maps.services.Geocoder();
+				var checkCoor;
 				if (inputData != null) {
 					kewwordSearch(inputData[count]);
 				}
@@ -326,40 +327,93 @@
 							}
 					}
 				}
+				var ma;
+				var la;
+				var wf3Am, wf3Pm, wf4Am, wf4Pm, wf5Am, wf5Pm, wf6Am, wf6Pm, wf7Am, wf7Pm;
+				var geocoder = new kakao.maps.services.Geocoder();
+				var callback = function(result, status) {
+				    if (status === kakao.maps.services.Status.OK) {
+				        console.log('지역 명칭 : ' + result[0].address_name);
+				        console.log('행정구역 코드 : ' + result[0].code);
+				        $('#acodeId').val(result[0].code);
+				        var applidate = $('#applidate').text();
+				        console.log("applidate: "+applidate);
+				        $.ajax({
+			  				url:"getWeather",
+			  				type:"GET",
+			  				dataType:"json",
+			  				contentType: "application/json",
+			  				data: {
+			  					La:la,
+			  					Ma:ma,
+			  					Acode:result[0].code,
+			  					appliDate:applidate
+			  				},
+			  				success: function(result){
+			  					console.log("success: "+result);
+			  					console.log("result wf5Pm: "+result.wf5Pm);
+			  					$('#dateInfo').text("남은 일 수: "+result.diffDate +" (한 주 날씨 클릭)");
+			  					wf3Am=result.wf3Am;
+			  					wf3Pm=result.wf3Pm;
+			  					wf4Am=result.wf4Am;
+			  					wf4Pm=result.wf4Pm;
+			  					wf5Am=result.wf5Am;
+			  					wf5Pm=result.wf5Pm;
+			  					wf6Am=result.wf6Am;
+			  					wf6Pm=result.wf6Pm;
+			  					wf7Am=result.wf7Am;
+			  					wf7Pm=result.wf7Pm;
+			  				},
+			  				error: function(error){
+			  					console.log("fail: "+error);
+			  				}
+			  			});
+				    }
+				}; 
+				var climateFlag=0;
+				function getClimate(e){ 
+					if(climateFlag==0){
+						$('#clioption').remove();
+						$('#climateInfo').after(
+							"<div id=\"clioption\" class=\"text-center\"> "
+							+" <p>3일뒤 오전날씨: "+wf3Am+" 오후날씨: "+wf3Pm+"<br>"
+							+" 4일뒤 오전날씨: "+wf4Am+" 오후날씨: "+wf4Pm+"<br>"
+							+" 5일뒤 오전날씨: "+wf5Am+" 오후날씨: "+wf5Pm+"<br>"
+							+" 6일뒤 오전날씨: "+wf6Am+" 오후날씨: "+wf6Pm+"<br>"
+							+" 7일뒤 오전날씨: "+wf7Am+" 오후날씨: "+wf7Pm+"</p>"
+							+"</div>"
+						);
+						climateFlag = 1;
+					}else{
+						$('#clioption').remove();
+						climateFlag = 0;
+					}
+				}
 				function displayMarker(place) {
 					var marker = new kakao.maps.Marker({
 						map: map,
-						position: new kakao.maps.LatLng(place.y, place.x),
-						
+						position: new kakao.maps.LatLng(place.y, place.x)
 					});
-					//위치 보기
-					//var iwContent = "<div style='padding:5px;'>${gatheringCreateName.mname}님의 정모 <br><a href='https://map.kakao.com/link/map/${gatheringCreateName.mname}님의 정모,"+place.y+","+place.x+"' style='color:blue' target='_blank'>크게보기</a></div>";
-					
-					
-					//누르면 길찾기 나옴
-					var iwContent = "<div >${gatheringCreateName.mname}님의 정모 <br>${gatheringInfo.ga_place}<a href='https://map.kakao.com/link/to/"+place.id+"' style='color:blue' target='_blank'>길찾기</a></div>";
-					
-					//var iwContent = "<div style='width:10px'>${gatheringCreateName.mname}님의 정모</div>";
-				    iwPosition = new kakao.maps.LatLng(place.y, place.x); //인포윈도우 표시 위치입니다
-
-					// 인포윈도우를 생성합니다
-					var infowindow = new kakao.maps.InfoWindow({
-					    position : iwPosition, 
-					    content : iwContent 
-					});
-					  
-					// 마커 위에 인포윈도우를 표시합니다. 두번째 파라미터인 marker를 넣어주지 않으면 지도 위에 표시됩니다
-					infowindow.open(map, marker); 
-				
+					var acode1 = geocoder.coord2RegionCode(place.x, place.y, callback);
+ 					var acode = $('#acodeId').val();
+ 					console.log("acode타입: "+typeof(acode));
+ 					String(acode);
+					console.log("acode: "+acode);
+					console.log("acode타입: "+typeof(acode));
+					console.log(marker.getPosition());
+					var coord = new kakao.maps.LatLng(place.y, place.x);		
+					la = place.y;
+					ma = place.x;
 					kakao.maps.event.addListener(marker, 'click', function () {
+						var position = this.getPosition();
 						var url = 'https://map.kakao.com/link/map/' + place.id;
 						window.open(url, '_blank');
+						console.log(checkCoor);
 					});
 				}
 				function setBounds() {
 					map.setBounds(bounds, 90, 30, 10, 30);
-					console.log(bounds);
-				} 
+				}
 	</script>
           
               </div>
@@ -376,7 +430,7 @@
                 class="course-info d-flex justify-content-between align-items-center"
               >
                 <h5><i class="bi bi-calendar4"></i></h5>
-                <p>${gatheringInfo.ga_date}</p>
+                <p id="applidate">${gatheringInfo.ga_date}</p>
               </div>
               <div
                 class="course-info d-flex justify-content-between align-items-center"
@@ -390,7 +444,15 @@
               >
                 <h5><i class="bi bi-geo-alt"></i></h5>
                 <p>${gatheringInfo.ga_place}</p>
+               
               </div>
+               <div id="climateInfo" onclick="getClimate(this)" 
+                class="course-info d-flex justify-content-between align-items-center"
+              >
+                <h5><i class="bi bi-geo-alt"></i></h5>
+                <p id="dateInfo">해당일 정보</p>
+              </div>
+             
               <div
                 class="course-info d-flex justify-content-between align-items-center"
               >
@@ -410,19 +472,19 @@
 	              <ul>
 	              <c:forEach var="memInGatheringName" items="${memInGatheringName}" varStatus="index">
 		              <c:choose>
-			              <c:when test="${memInGatheringName.Grade eq 0}">
+			              <c:when test="${memInGatheringName.GRADE eq 0}">
 			              	<c:set var="grade" value="모임장"/>
 			              </c:when>
-			              <c:when test="${memInGatheringName.Grade eq 1}">
+			              <c:when test="${memInGatheringName.GRADE eq 1}">
 			              	<c:set var="grade" value="운영진"/>
 			              </c:when>
 			              <c:otherwise>
-			              	<c:set var="grade" value="나"/>
+			              	<c:set var="grade" value=""/>
 			              </c:otherwise>
 		              </c:choose>
-		              <c:choose>
-			              <c:when test="${m.mnum eq memInGatheringNmae.MNUM}">
-			                <li><a href="javascript:void(0)">${memInGatheringName.MNAME}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${grade}</a></li>
+		               <c:choose>
+			              <c:when test="${m.mnum eq memInGatheringName.MNUM}">
+			                <li><a href="javascript:void(0)">${memInGatheringName.MNAME}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${grade}(나)</a></li>
 			              </c:when>
 			              <c:otherwise>  
 			                <li><a href="javascript:void(0)" onclick="location.href='javascript:memberInfo(${index.index})'">${memInGatheringName.MNAME}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${grade}</a></li>

@@ -606,7 +606,7 @@
 									  data-bs-toggle="dropdown"
 									  aria-expanded="false"
 									  style="color: black; border-color: black">
-										<span id='span3'>세부관심사</span> 
+										<span id='span3'>세부관심사1</span> 
 									</button>
 									<ul id="ul3" class="dropdown-menu">
 									</ul>
@@ -691,7 +691,7 @@
                           <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                           <div class="form-outline flex-fill mb-2">
                             <label class="form-label mb-0" for="form3Example1c"
-                              >세번째 카테고리
+                              >세번째 s카테고리
                               </label
                             >
                             

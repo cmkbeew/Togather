@@ -25,4 +25,8 @@ public class GroupTab {
 	private long mnum;
 	private String fname;
 	private MultipartFile uploadFile;
+	//== nameList, numberOfmem-in-group
+	private String mname;
+	private Long memInGroupCount;
+
 }

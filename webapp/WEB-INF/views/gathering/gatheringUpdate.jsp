@@ -137,7 +137,7 @@
                     type="text"
                     name="ga_name"
                     class="form-control form-control-lg"
-                    placeholder="${updateList.ga_name}"
+                    value="${updateList.ga_name}"
                     required
                   />
                 </div>
@@ -146,7 +146,7 @@
                     type="text"
                     name="ga_place"
                     class="form-control form-control-lg"
-                    placeholder="${updateList.ga_place}"
+                    value="${updateList.ga_place}"
                     required
                   />
                 </div>
@@ -155,7 +155,7 @@
                     type="time"
                     name="time"
                     class="form-control form-control-lg"
-                    placeholder="${updateList.time}"
+                    value="${updateList.time}"
                     required
                   />
                 </div>
@@ -164,7 +164,7 @@
                     type="text"
                     name="ga_date"
                     class="form-control form-control-lg"
-                    placeholder="${updateList.ga_date}"
+                    value="${updateList.ga_date}"
                     disabled
                   />
                 </div>
@@ -173,7 +173,7 @@
                     type="text"
                     name="price"
                     class="form-control form-control-lg"
-                    placeholder="${updateList.price}"
+                    value="${updateList.price}"
                     required
                   />
                 </div>
@@ -184,7 +184,7 @@
                     class="form-control form-control-lg"
                     min="2"
                     max="20"
-                    placeholder="${updateList.ga_limit}"
+                    value="${updateList.ga_limit}"
                     required
                   />
                 </div>

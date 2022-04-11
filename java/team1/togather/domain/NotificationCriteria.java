@@ -5,12 +5,12 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class NotificationCriteria {
-	
+
 	private int page;
 	private int pageSize;
 	private String option = "작성자";
 	private String ocontent = "장";
-	
+
 	public NotificationCriteria(int page, int pageSize) {
 		this.page = page;
 		this.pageSize = pageSize;
@@ -29,7 +29,7 @@ public class NotificationCriteria {
 	public int getPage() {
 		return page;
 	}
-	
+
 	public void setPage(int page) {
 		if(page <=0) {
 			this.page = 1;
@@ -44,20 +44,20 @@ public class NotificationCriteria {
 
 	public void setPageSize(int pageSize) {
 		if(pageSize <=0 || pageSize > 100) {
-			this.pageSize = 10;			
+			this.pageSize = 10;
 			return;
 		}
-		this.pageSize = pageSize;			
+		this.pageSize = pageSize;
 	}
-	
+
 	public int getPageStart() {
 		return (this.page - 1)*this.pageSize;
 	}
-	
+
 	//toString()
 	@Override
 	public String toString() {
 		return "Criteria [page=" + page + ", pageSize=" + pageSize + "]";
 	}
-	
+
 }

@@ -15,9 +15,9 @@ import team1.togather.mapper.GroupTabMapper;
 
 @Service
 public class GatheringServiceImpl implements GatheringService {
-	
+
 	@Autowired
-	private GatheringMapper gatheringMapper; 
+	private GatheringMapper gatheringMapper;
 	@Autowired
 	private GroupTabMapper groupTabMapper;
 
@@ -44,7 +44,7 @@ public class GatheringServiceImpl implements GatheringService {
 		gatheringMapper.ga_delete(ga_seq);
 
 	}
-	
+
 	@Override
 	public List<Gathering> ga_selectByGseqS(long gseq) {
 		List<Gathering> list = gatheringMapper.ga_selectByGseq(gseq);
@@ -81,7 +81,7 @@ public class GatheringServiceImpl implements GatheringService {
 	@Override
 	public void memInGatheringDelete(long ga_seq) {//모임삭제시 참여멤버 삭제
 		gatheringMapper.memInGatheringDelete(ga_seq);
-	}	
+	}
 	@Override
 	public Gathering insertGatheringInfo(Gathering gathering) {//모임 생성시 모임인포로 이동
 		return gatheringMapper.insertGatheringInfo(gathering);
@@ -109,11 +109,5 @@ public class GatheringServiceImpl implements GatheringService {
 	@Override
 	public long gatheringCount() {
 		return gatheringMapper.gatheringCount();
-	}
-
-	@Override
-	public String gathringInfoMemberName(MemInGathering memInGathering) {
-		return gatheringMapper.gathringInfoMemberName(memInGathering);
-		
 	}
 }

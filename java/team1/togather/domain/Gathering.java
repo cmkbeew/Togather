@@ -1,6 +1,5 @@
 package team1.togather.domain;
 
-import java.sql.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,5 +18,5 @@ public class Gathering {
 	private int ga_limit;
 	private long gseq;
 	private long mnum;
-	
+	//github테스트
 }
