@@ -1,0 +1,55 @@
+.contentsWrap {
+    overflow: hidden;
+}
+#intro {
+    position: relative;
+    width: 100%;
+    height: 50%;
+    overflow: hidden;
+    top: 0;
+}
+
+#intro .video {
+    height: 100%;
+    overflow: hidden;
+}
+
+#intro .video:after {
+    content: "";
+}
+
+#intro .video video {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
+video {
+    width: 100%;
+    height: auto;
+}
+#intro .typing {
+    width: 100%;
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: #fff;
+    font-size: 64px;
+    font-weight: 100;
+    z-index: 2;
+    text-transform: uppercase;
+}
+.typing {
+    position: absolute;
+}
+
+#intro .typing strong {
+    font-weight: 700;
+}
