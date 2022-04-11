@@ -24,7 +24,7 @@ import team1.togather.domain.PageMaker;
 import team1.togather.domain.Reply;
 import team1.togather.service.BoardService;
 import team1.togather.service.ReplyService;
-
+//보석 git 테스트
 @Controller
 @RequestMapping("/board")
 public class BoardController {
